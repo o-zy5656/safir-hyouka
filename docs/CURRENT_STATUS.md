@@ -173,5 +173,15 @@ https://safir-hyouka.vercel.app,http://localhost:5173
 ## 調査時点の技術メモ
 
 - 親リポジトリ `My-First-Project` の remote: `o-zy5656/kaigo-dx-study`（API 上は非公開 or 不存在）
-- `safir_hyouka` は親 Git の **untracked**（別リポジトリとして push するのが安全）
+- `safir_hyouka` は **独立 Git リポジトリ化済み**（2025-06-25）
+- 初回コミット済み。remote: `o-zy5656/safir-hyouka`（リポジトリ作成後に push）
 - `gh` / `vercel` CLI は未インストール（ブラウザ操作で十分）
+
+## ローカルで完了した作業（2025-06-25）
+
+- [x] `git init` + 初回コミット（78 files）
+- [x] `origin` → `https://github.com/o-zy5656/safir-hyouka.git`
+- [x] Railway デモ自動 seed（`AUTO_SEED_DEMO`）
+- [ ] GitHub リポジトリ作成 → **あなたの操作** → [`YOU_DO_THIS.md`](./YOU_DO_THIS.md)
+- [ ] `git push`
+- [ ] Vercel + Railway デプロイ

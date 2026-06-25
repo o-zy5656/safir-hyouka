@@ -8,7 +8,7 @@
 - `frontend/` — React + TypeScript（Vite）
 - `docs/DEPLOYMENT.md` — **本番デプロイ（社内サーバー）**
 - `docs/DEPLOY_VERCEL.md` — **課題提出用 Vercel 公開（デモデータのみ）**
-- `docs/CURRENT_STATUS.md` — **現状調査・次にやること（GitHub/Vercel）**
+- `docs/YOU_DO_THIS.md` — **あなたがやること（GitHub push のみ）**
 - `docs/UAT_CHECKLIST.md` — **受入テストチェックリスト**
 - `docs/POSTGRESQL_SETUP.md` — PostgreSQL セットアップ（開発向け）
 - `docs/TEMPLATE_GUIDE.md` — 評価表テンプレート差し替え手順（非エンジニア向け）
