@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: safir_hyouka_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: safir_hyouka
+      POSTGRES_USER: safir
+      POSTGRES_PASSWORD: safir
+    ports:
+      - "5432:5432"
+    volumes:
+      - safir_hyouka_pgdata:/var/lib/postgresql/data
+
+volumes:
+  safir_hyouka_pgdata:

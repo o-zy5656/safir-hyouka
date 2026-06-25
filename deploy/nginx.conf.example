@@ -1,0 +1,36 @@
+# サフィール人事考課 — nginx 設定例
+# 配置例: /etc/nginx/sites-available/safir-hyouka
+#
+# sudo ln -s /etc/nginx/sites-available/safir-hyouka /etc/nginx/sites-enabled/
+# sudo nginx -t && sudo systemctl reload nginx
+
+server {
+    listen 80;
+    # 社内 DNS 名または固定 IP に合わせて変更
+    server_name hyouka.local;
+
+    # フロントエンド（npm run build の出力）
+    root /opt/safir_hyouka/frontend/dist;
+    index index.html;
+
+    client_max_body_size 20M;
+
+    # API を FastAPI にプロキシ（同一オリジン → CORS 不要）
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+    }
+
+    # SPA（ルートのみだが将来の拡張用）
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    access_log /var/log/nginx/safir-hyouka.access.log;
+    error_log  /var/log/nginx/safir-hyouka.error.log;
+}

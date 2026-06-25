@@ -1,0 +1,24 @@
+# 本番サーバー上の PostgreSQL 用（アプリ本体はホストの Python + nginx で動かす想定）
+#
+# 起動:
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# backend/.env:
+#   DATABASE_URL=postgresql+psycopg://safir:＜強力なパスワード＞@127.0.0.1:5432/safir_hyouka
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: safir_hyouka_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: safir_hyouka
+      POSTGRES_USER: safir
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - safir_hyouka_pgdata:/var/lib/postgresql/data
+
+volumes:
+  safir_hyouka_pgdata:

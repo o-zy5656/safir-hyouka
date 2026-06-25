@@ -1,0 +1,21 @@
+[Unit]
+Description=Safir Hyouka API (FastAPI)
+After=network.target postgresql.service docker.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=safir
+Group=safir
+WorkingDirectory=/opt/safir_hyouka/backend
+EnvironmentFile=/opt/safir_hyouka/backend/.env
+ExecStart=/opt/safir_hyouka/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2 --app-dir /opt/safir_hyouka/backend
+Restart=on-failure
+RestartSec=5
+
+# セキュリティ（必要に応じて調整）
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
