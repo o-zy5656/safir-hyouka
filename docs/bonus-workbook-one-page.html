@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>賞与表ワークスペース — 1ページ概要</title>
+  <style>
+    @page { size: A4 portrait; margin: 10mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      font-size: 8.5pt;
+      line-height: 1.35;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      padding: 12px;
+    }
+    .page {
+      max-width: 210mm;
+      min-height: 277mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 10mm 11mm;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page { box-shadow: none; max-width: none; min-height: auto; padding: 0; }
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2.5px solid #2563eb;
+      padding-bottom: 5px;
+      margin-bottom: 7px;
+    }
+    .header h1 { font-size: 13pt; color: #1e40af; letter-spacing: .02em; }
+    .header .meta { font-size: 7.5pt; color: #555; text-align: right; }
+    .header .meta span { display: block; }
+
+    /* Grid layout */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 7px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 7px; }
+
+    section { margin-bottom: 6px; }
+    h2 {
+      font-size: 9pt;
+      color: #1e40af;
+      border-left: 3px solid #2563eb;
+      padding-left: 5px;
+      margin-bottom: 4px;
+    }
+    h3 { font-size: 8pt; color: #374151; margin: 3px 0 2px; }
+
+    .box {
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: 5px 6px;
+      background: #fafafa;
+    }
+    .box.highlight { background: #eff6ff; border-color: #93c5fd; }
+
+    /* Architecture diagram */
+    .arch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 7.5pt;
+    }
+    .arch-row { display: flex; gap: 5px; align-items: center; justify-content: center; width: 100%; }
+    .arch-box {
+      border: 1.5px solid #374151;
+      border-radius: 4px;
+      padding: 3px 7px;
+      text-align: center;
+      background: #fff;
+      min-width: 80px;
+    }
+    .arch-box.ui { background: #dbeafe; border-color: #2563eb; }
+    .arch-box.api { background: #fef3c7; border-color: #d97706; }
+    .arch-box.db { background: #dcfce7; border-color: #16a34a; }
+    .arch-box.file { background: #f3e8ff; border-color: #9333ea; }
+    .arch-box.xl { background: #fce7f3; border-color: #db2777; }
+    .arrow { font-size: 10pt; color: #6b7280; line-height: 1; }
+    .arrow-h { font-size: 9pt; color: #6b7280; }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap;
+      font-size: 7pt;
+    }
+    .flow-step {
+      background: #fff;
+      border: 1px solid #9ca3af;
+      border-radius: 3px;
+      padding: 2px 5px;
+      white-space: nowrap;
+    }
+    .flow-arrow { color: #2563eb; font-weight: bold; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 7.5pt; }
+    th, td { border: 1px solid #d1d5db; padding: 2px 4px; text-align: left; vertical-align: top; }
+    th { background: #e5e7eb; font-weight: 600; white-space: nowrap; }
+    td.center { text-align: center; }
+    .tag {
+      display: inline-block;
+      font-size: 6.5pt;
+      padding: 0 3px;
+      border-radius: 2px;
+      font-weight: 600;
+    }
+    .tag-dir { background: #dbeafe; color: #1d4ed8; }
+    .tag-hq { background: #fce7f3; color: #be185d; }
+    .tag-both { background: #f3f4f6; color: #374151; }
+
+    /* Permission matrix mini */
+    .perm-yes { color: #16a34a; font-weight: bold; }
+    .perm-no { color: #9ca3af; }
+    .perm-view { color: #2563eb; }
+
+    /* Reflection boxes */
+    .reflect-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+    .reflect-grid .box { font-size: 7.5pt; }
+    .reflect-grid ul { padding-left: 12px; margin-top: 2px; }
+    .reflect-grid li { margin-bottom: 1px; }
+
+    /* Footer */
+    .footer {
+      margin-top: 5px;
+      padding-top: 4px;
+      border-top: 1px solid #d1d5db;
+      font-size: 7pt;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .answer-box {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 7.5pt;
+    }
+    .answer-box strong { color: #166534; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <h1>賞与表ワークスペース — 1ページ概要</h1>
+      <div class="meta">
+        <span>サフィール人事考課・賞与表システム</span>
+        <span>氏名：（　　　　　）　作成日：2026/6/26</span>
+      </div>
+    </header>
+
+    <!-- ===== PURPOSE ===== -->
+    <section>
+      <h2>目的</h2>
+      <p style="font-size:8pt;">
+        Excel ベースの賞与表運用を Web 化し、<strong>考課連携・役割分担（施設長/本部）・年度別保存・引当金差額の可視化</strong>を実現する。
+      </p>
+    </section>
+
+    <!-- ===== ARCHITECTURE DIAGRAM ===== -->
+    <section>
+      <h2>システム構成図</h2>
+      <div class="box highlight">
+        <div class="arch">
+          <div class="arch-row">
+            <div class="arch-box ui" style="min-width:220px;">
+              <strong>React UI</strong><br/>
+              BonusWorkbookWorkspace<br/>
+              <span style="color:#555;">施設/年度選択・表編集・サマリー・Excel出力</span>
+            </div>
+          </div>
+          <div class="arrow">▼ REST API ▼</div>
+          <div class="arch-row">
+            <div class="arch-box api">
+              <strong>FastAPI</strong><br/>
+              GET /bonus-workbook<br/>
+              PUT /amounts（自動保存）<br/>
+              PUT /bonus-workbook<br/>
+              POST /sync
+            </div>
+          </div>
+          <div class="arrow">▼ 読み書き ▼</div>
+          <div class="arch-row">
+            <div class="arch-box db"><strong>PostgreSQL</strong><br/>名簿・考課</div>
+            <span class="arrow-h">＋</span>
+            <div class="arch-box file"><strong>JSON</strong><br/>bonus_amounts/<br/>{施設}.json</div>
+            <span class="arrow-h">＋</span>
+            <div class="arch-box xl"><strong>Excel</strong><br/>テンプレート<br/>（任意）</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DATA + STORAGE (2 columns) ===== -->
+    <div class="grid-2">
+      <section>
+        <h2>保持データ（職員1行）</h2>
+        <table>
+          <tr><th>カテゴリ</th><th>項目</th><th>編集</th></tr>
+          <tr><td>基本</td><td>氏名・役職・社員ID</td><td class="center"><span class="tag tag-both">自動</span></td></tr>
+          <tr><td>考課</td><td>自己/一次/二次評点・最終点</td><td class="center"><span class="tag tag-dir">施設長</span></td></tr>
+          <tr><td>分析</td><td>8点/6点未満・カット・昇格参考</td><td class="center"><span class="tag tag-both">考課反映</span></td></tr>
+          <tr><td>順位</td><td>順位・ランク(A〜E)・備考</td><td class="center"><span class="tag tag-dir">施設長</span></td></tr>
+          <tr><td>前年</td><td>前年夏/冬 賞与（千円）</td><td class="center"><span class="tag tag-hq">本部</span></td></tr>
+          <tr><td>賞与</td><td>賞与金額（案）</td><td class="center"><span class="tag tag-dir">施設長</span></td></tr>
+          <tr><td>賞与</td><td>確定賞与金額</td><td class="center"><span class="tag tag-hq">本部</span></td></tr>
+          <tr><td>施設</td><td>引当金（月額×6or12ヶ月）</td><td class="center"><span class="tag tag-dir">施設長</span></td></tr>
+        </table>
+        <p style="font-size:7pt;margin-top:3px;color:#555;">※ 金額単位はすべて<strong>千円</strong>。過去年度は閲覧のみ。</p>
+      </section>
+
+      <section>
+        <h2>保存先と理由</h2>
+        <table>
+          <tr><th>保存先</th><th>パス</th><th>なぜ</th></tr>
+          <tr>
+            <td><strong>PostgreSQL</strong></td>
+            <td>employees<br/>evaluations</td>
+            <td>名簿・考課の正データ。他機能と共有</td>
+          </tr>
+          <tr>
+            <td><strong>JSON</strong></td>
+            <td>data/bonus_amounts/<br/>{施設}.json</td>
+            <td>賞与専用・年度別。Web から高速 R/W・履歴参照</td>
+          </tr>
+          <tr>
+            <td><strong>Excel</strong></td>
+            <td>.env テンプレート</td>
+            <td>既存運用互換・ダウンロード用</td>
+          </tr>
+          <tr>
+            <td><strong>設定JSON</strong></td>
+            <td>facilities.json</td>
+            <td>8施設・シート名・引当金初期値</td>
+          </tr>
+        </table>
+
+        <h3 style="margin-top:5px;">JSON 構造（年度別）</h3>
+        <pre style="font-size:6.5pt;background:#1e293b;color:#e2e8f0;padding:4px 6px;border-radius:3px;line-height:1.3;">{ "years": { "2026": {
+  "provision_monthly": 1100,
+  "provision_months": 6,
+  "rows": { "i1001": {
+    "proposed_bonus_amount": 500,
+    "bonus_amount": 450, ... }}}}}</pre>
+      </section>
+    </div>
+
+    <!-- ===== FLOW + SUMMARY ===== -->
+    <div class="grid-2">
+      <section>
+        <h2>運用フロー</h2>
+        <div class="flow">
+          <span class="flow-step">①考課提出</span><span class="flow-arrow">→</span>
+          <span class="flow-step">②考課反映</span><span class="flow-arrow">→</span>
+          <span class="flow-step">③施設長：案+引当金</span><span class="flow-arrow">→</span>
+          <span class="flow-step">④本部：確定</span><span class="flow-arrow">→</span>
+          <span class="flow-step">⑤差額確認</span><span class="flow-arrow">→</span>
+          <span class="flow-step">⑥Excel出力</span>
+        </div>
+        <h3 style="margin-top:4px;">保存の2系統</h3>
+        <table>
+          <tr><th>系統</th><th>API</th><th>タイミング</th><th>保存先</th></tr>
+          <tr><td>金額・引当金</td><td>PUT /amounts</td><td>自動(0.7s)</td><td>JSON</td></tr>
+          <tr><td>採点・順位・備考</td><td>PUT /bonus-workbook</td><td>手動</td><td>JSON+Excel</td></tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>サマリー集計</h2>
+        <table>
+          <tr><th>項目</th><th>計算</th></tr>
+          <tr><td>賞与金額（案）合計</td><td>全行 proposed_bonus_amount の合計</td></tr>
+          <tr><td>確定賞与合計</td><td>全行 bonus_amount の合計</td></tr>
+          <tr><td>社保込み合計</td><td>確定合計 × 1.15</td></tr>
+          <tr><td>引当金合計</td><td>月額 × 月数（施設長ビューは全施設合算）</td></tr>
+          <tr><td><strong>差額</strong></td><td><strong>引当金 − 社保込み（余剰/超過表示）</strong></td></tr>
+        </table>
+      </section>
+    </div>
+
+    <!-- ===== PERMISSION MATRIX ===== -->
+    <section>
+      <h2>権限マトリクス（現行年度）</h2>
+      <table style="width:70%;">
+        <tr>
+          <th>項目</th>
+          <th class="center">施設長</th>
+          <th class="center">本部</th>
+          <th class="center">過去年度</th>
+        </tr>
+        <tr><td>賞与金額（案）</td><td class="center perm-yes">編集</td><td class="center perm-view">閲覧</td><td class="center perm-view">閲覧</td></tr>
+        <tr><td>確定賞与</td><td class="center perm-view">閲覧</td><td class="center perm-yes">編集</td><td class="center perm-view">閲覧</td></tr>
+        <tr><td>引当金</td><td class="center perm-yes">編集</td><td class="center perm-view">閲覧</td><td class="center perm-view">閲覧</td></tr>
+        <tr><td>採点・順位・備考</td><td class="center perm-yes">編集</td><td class="center perm-yes">編集</td><td class="center perm-view">閲覧</td></tr>
+      </table>
+    </section>
+
+    <!-- ===== REFLECTION (3 columns) ===== -->
+    <section>
+      <h2>開発所感</h2>
+      <div class="reflect-grid">
+        <div class="box">
+          <h3>苦戦したこと</h3>
+          <ul>
+            <li>Excel と Web の二重管理（ハイブリッド構成）</li>
+            <li>項目×ロール×年度の権限制御</li>
+            <li>単位統一（円→千円）とマイグレーション</li>
+            <li>flex 内スクロール不具合の CSS 調整</li>
+            <li>年度別 JSON への既存データ移行</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>うまくいったこと</h3>
+          <ul>
+            <li>名簿連携で全施設対応（Excel 不要も可）</li>
+            <li>金額・引当金の自動保存</li>
+            <li>引当金差額のリアルタイム表示</li>
+            <li>年度プルダウンで過去閲覧</li>
+            <li>施設長/本部の役割が UI で明確</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>もっとやりたかったこと</h3>
+          <ul>
+            <li>JSON → DB テーブル化</li>
+            <li>過去年度の完全スナップショット</li>
+            <li>Excel 出力への金額反映</li>
+            <li>承認フロー・差額アラート</li>
+            <li>変更履歴の可視化</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SUBMISSION ANSWERS ===== -->
+    <section>
+      <h2>提出課題 — 3問への回答</h2>
+      <div class="grid-3">
+        <div class="answer-box">
+          <strong>Q1. 保持データ</strong><br/>
+          考課点・順位・備考・前年賞与・賞与金額（案/確定）・施設引当金を年度単位で保持。社保込み合計と引当金の差額を自動集計。
+        </div>
+        <div class="answer-box">
+          <strong>Q2. 保存先と理由</strong><br/>
+          PG=名簿・考課の正データ。JSON=賞与専用の年度別データ（高速 R/W・履歴）。Excel=既存互換。考課と賞与の更新タイミングが異なるため分離。
+        </div>
+        <div class="answer-box">
+          <strong>Q3. 所感</strong><br/>
+          Excel 文化との共存と権限設計が最大の難所。一方、差額表示・自動保存・全施設対応で運用メリットを実感。DB 化・承認フローへ拡張したい。
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>safir_hyouka / docs/bonus-workbook-one-page.html</span>
+      <span>印刷：ブラウザ → ファイル → 印刷（A4縦）</span>
+    </footer>
+
+  </div>
+</body>
+</html>

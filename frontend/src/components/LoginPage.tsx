@@ -18,9 +18,9 @@ export function LoginPage({ onSuccess }: Props) {
     setError(null);
     try {
       await login(employeeId, password);
-      onSuccess();
-    } catch {
-      setError("社員IDまたはパスワードが正しくありません");
+      await onSuccess();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "ログインに失敗しました");
     } finally {
       setLoading(false);
     }

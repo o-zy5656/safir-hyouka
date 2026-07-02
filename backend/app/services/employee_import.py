@@ -9,7 +9,7 @@ from typing import Any, Optional
 from openpyxl import load_workbook
 from sqlalchemy.orm import Session
 
-from app.models import AuditLog, Employee, Evaluation, EvaluationPeriod, User, UserRole
+from app.models import AuditLog, Employee, EmploymentStatus, Evaluation, EvaluationPeriod, User, UserRole
 
 
 IMPORT_COLUMNS = {
@@ -201,6 +201,8 @@ def import_employees_from_excel(
             existing.assignment = record["assignment"]
             existing.job_type = record["job_type"]
             existing.years_of_service = years
+            existing.employment_status = EmploymentStatus.ACTIVE
+            existing.retired_at = None
             result.updated += 1
         else:
             user, created_user = _get_or_create_user(
@@ -215,6 +217,7 @@ def import_employees_from_excel(
                 job_type=record["job_type"],
                 years_of_service=years,
                 user_id=user.id,
+                employment_status=EmploymentStatus.ACTIVE,
             )
             db.add(existing)
             db.flush()
@@ -241,7 +244,7 @@ def import_employees_from_excel(
             else:
                 employee.evaluator1_id = ev1.id
         else:
-            result.errors.append(f"{record['employee_id']}: 評価者1社員IDが空です")
+            employee.evaluator1_id = None
 
         if ev2_id:
             ev2 = employee_cache.get(ev2_id)
@@ -249,6 +252,8 @@ def import_employees_from_excel(
                 result.errors.append(f"{record['employee_id']}: 評価者2 ({ev2_id}) が見つかりません")
             else:
                 employee.evaluator2_id = ev2.id
+        else:
+            employee.evaluator2_id = None
 
     _apply_user_roles(db, rows, has_role_column, result)
 
@@ -259,8 +264,13 @@ def import_employees_from_excel(
             .filter(Evaluation.period_id == active_period.id)
             .all()
         }
-        for employee in employee_cache.values():
-            if employee.id in existing_eval_employee_ids:
+        for record in rows:
+            employee = employee_cache.get(record["employee_id"])
+            if (
+                not employee
+                or employee.employment_status != EmploymentStatus.ACTIVE
+                or employee.id in existing_eval_employee_ids
+            ):
                 continue
             db.add(Evaluation(period_id=active_period.id, employee_id=employee.id))
             result.evaluations_created += 1

@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
 from sqlalchemy.types import Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -40,6 +40,11 @@ class SubmissionStatus(str, enum.Enum):
     RETURNED = "returned"
 
 
+class EmploymentStatus(str, enum.Enum):
+    ACTIVE = "active"
+    RETIRED = "retired"
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -49,6 +54,8 @@ class User(Base):
     role: Mapped[UserRole] = mapped_column(Enum(UserRole))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     must_change_password: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_hq_evaluator: Mapped[bool] = mapped_column(Boolean, default=False)
 
     employee: Mapped["Employee | None"] = relationship(back_populates="user", uselist=False)
 
@@ -61,10 +68,16 @@ class Employee(Base):
     name: Mapped[str] = mapped_column(String(100))
     assignment: Mapped[str] = mapped_column(String(100))
     job_type: Mapped[str] = mapped_column(String(100))
+    job_title: Mapped[Optional[str]] = mapped_column(String(100), default="一般")
     years_of_service: Mapped[int] = mapped_column(Integer, default=0)
     evaluator1_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid(as_uuid=True), ForeignKey("employees.id"))
     evaluator2_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid(as_uuid=True), ForeignKey("employees.id"))
     user_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid(as_uuid=True), ForeignKey("users.id"))
+    employment_status: Mapped[EmploymentStatus] = mapped_column(
+        Enum(EmploymentStatus, values_callable=lambda x: [e.value for e in x]),
+        default=EmploymentStatus.ACTIVE,
+    )
+    retired_at: Mapped[Optional[datetime]] = mapped_column(DateTime)
 
     user: Mapped[Optional[User]] = relationship(back_populates="employee")
     evaluator1: Mapped["Employee | None"] = relationship(foreign_keys=[evaluator1_id], remote_side=[id])
@@ -94,11 +107,20 @@ class EvaluationPeriod(Base):
     eval2_deadline: Mapped[Optional[datetime]] = mapped_column(DateTime)
     self_eval_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid(as_uuid=True), ForeignKey("form_templates.id"))
     assessment_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid(as_uuid=True), ForeignKey("form_templates.id"))
+    facility_director_self_eval_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("form_templates.id")
+    )
+    facility_director_assessment_template_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("form_templates.id")
+    )
     status: Mapped[PeriodStatus] = mapped_column(Enum(PeriodStatus), default=PeriodStatus.DRAFT)
 
 
 class Evaluation(Base):
     __tablename__ = "evaluations"
+    __table_args__ = (
+        UniqueConstraint("period_id", "employee_id", name="uq_evaluation_period_employee"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
     period_id: Mapped[uuid.UUID] = mapped_column(Uuid(as_uuid=True), ForeignKey("evaluation_periods.id"))

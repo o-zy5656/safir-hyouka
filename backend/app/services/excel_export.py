@@ -40,7 +40,11 @@ def build_period_export(
     period: EvaluationPeriod,
     self_template: dict,
     assessment_template: dict,
+    director_self_template: Optional[dict] = None,
+    director_assessment_template: Optional[dict] = None,
 ) -> tuple[bytes, str]:
+    director_self = director_self_template or self_template
+    director_assessment = director_assessment_template or assessment_template
     evaluations = db.query(Evaluation).filter(Evaluation.period_id == period.id).all()
     employee_map = {emp.id: emp for emp in db.query(Employee).all()}
 
@@ -86,6 +90,9 @@ def build_period_export(
         if not employee:
             continue
 
+        row_self_tpl = director_self if employee.job_title == "施設長" else self_template
+        row_items = row_self_tpl.get("items", [])
+
         self_total = _sum_scores(evaluation.self_eval_data)
         eval1_total = _sum_scores(evaluation.eval1_data)
         eval2_total = _sum_scores(evaluation.eval2_data)
@@ -109,7 +116,7 @@ def build_period_export(
         self_scores = (evaluation.self_eval_data or {}).get("scores") or {}
         eval1_scores = (evaluation.eval1_data or {}).get("scores") or {}
         eval2_scores = (evaluation.eval2_data or {}).get("scores") or {}
-        for item in items:
+        for item in row_items:
             item_id = item["id"]
             detail.append(
                 [
@@ -128,12 +135,14 @@ def build_period_export(
     for cell in notes[1]:
         cell.font = Font(bold=True)
 
-    self_text_fields = self_template.get("text_fields") or []
-    assess_text_fields = assessment_template.get("text_fields") or []
     for evaluation in evaluations:
         employee = employee_map.get(evaluation.employee_id)
         if not employee:
             continue
+        row_self_tpl = director_self if employee.job_title == "施設長" else self_template
+        row_assess_tpl = director_assessment if employee.job_title == "施設長" else assessment_template
+        self_text_fields = row_self_tpl.get("text_fields") or []
+        assess_text_fields = row_assess_tpl.get("text_fields") or []
         self_text = (evaluation.self_eval_data or {}).get("text_fields") or {}
         eval1_text = (evaluation.eval1_data or {}).get("text_fields") or {}
         eval2_text = (evaluation.eval2_data or {}).get("text_fields") or {}

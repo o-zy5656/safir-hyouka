@@ -18,6 +18,12 @@ export function AttributePanel({ attributes, title = "属性" }: Props) {
         <dd>{attributes.assignment}</dd>
         <dt>職種</dt>
         <dd>{attributes.job_type}</dd>
+        {attributes.job_title && (
+          <>
+            <dt>役職</dt>
+            <dd>{attributes.job_title}</dd>
+          </>
+        )}
         <dt>勤続年数</dt>
         <dd>{attributes.years_of_service} 年</dd>
       </dl>

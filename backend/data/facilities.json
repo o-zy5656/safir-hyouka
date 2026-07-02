@@ -1,0 +1,80 @@
+{
+  "facilities": [
+    {
+      "key": "inaha",
+      "label": "サフィールいなは",
+      "assignment_match": "サフィールいなは",
+      "enabled": true,
+      "bonus": {
+        "data_sheet": "R7\u3000いなは資料 ",
+        "layout": "default",
+        "provision_monthly": 1100,
+        "provision_months": 12
+      }
+    },
+    {
+      "key": "sohara",
+      "label": "サフィールそはら",
+      "assignment_match": "サフィールそはら",
+      "enabled": true,
+      "bonus": {
+        "data_sheet": "R７夏\u3000資料",
+        "layout": "default"
+      }
+    },
+    {
+      "key": "unuma",
+      "label": "サフィール鵜沼",
+      "assignment_match": "サフィール鵜沼",
+      "enabled": true,
+      "bonus": {
+        "layout": "default"
+      }
+    },
+    {
+      "key": "amaike",
+      "label": "サフィールあまいけ",
+      "assignment_match": "サフィールあまいけ",
+      "enabled": true,
+      "bonus": {
+        "layout": "default"
+      }
+    },
+    {
+      "key": "kasamatsu",
+      "label": "サフィール各務原",
+      "assignment_match": "サフィール各務原",
+      "enabled": true,
+      "bonus": {
+        "layout": "default"
+      }
+    },
+    {
+      "key": "ogaki",
+      "label": "サフィール大垣",
+      "assignment_match": "サフィール大垣",
+      "enabled": true,
+      "bonus": {
+        "layout": "default"
+      }
+    },
+    {
+      "key": "haguro",
+      "label": "サフィール羽黒",
+      "assignment_match": "サフィール羽黒",
+      "enabled": true,
+      "bonus": {
+        "layout": "default"
+      }
+    },
+    {
+      "key": "kani",
+      "label": "サフィール可児",
+      "assignment_match": "サフィール可児",
+      "enabled": true,
+      "bonus": {
+        "layout": "default"
+      }
+    }
+  ]
+}

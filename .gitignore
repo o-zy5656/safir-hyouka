@@ -7,4 +7,12 @@ node_modules/
 dist/
 .DS_Store
 backend/safir_hyouka.db
+backend/data/bonus_amounts/*.json
+!backend/data/bonus_amounts/.gitkeep
+backend/data/retired_employees/*
+!backend/data/retired_employees/.gitkeep
+data/retired_employees/*
+!data/retired_employees/.gitkeep
+*.xlsx
+!docs/employee_import_template.xlsx
 *.db

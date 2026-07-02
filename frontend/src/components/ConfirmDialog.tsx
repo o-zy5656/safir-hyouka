@@ -6,6 +6,10 @@ interface Props {
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  reason?: string;
+  onReasonChange?: (value: string) => void;
+  reasonLabel?: string;
+  reasonPlaceholder?: string;
 }
 
 export function ConfirmDialog({
@@ -16,6 +20,10 @@ export function ConfirmDialog({
   cancelLabel = "キャンセル",
   onConfirm,
   onCancel,
+  reason,
+  onReasonChange,
+  reasonLabel,
+  reasonPlaceholder,
 }: Props) {
   if (!open) return null;
 
@@ -30,11 +38,22 @@ export function ConfirmDialog({
       >
         <h3 id="confirm-dialog-title">{title}</h3>
         <p>{message}</p>
+        {onReasonChange && (
+          <label className="confirm-reason-field">
+            {reasonLabel ?? "理由（任意）"}
+            <textarea
+              rows={3}
+              value={reason ?? ""}
+              placeholder={reasonPlaceholder}
+              onChange={(e) => onReasonChange(e.target.value)}
+            />
+          </label>
+        )}
         <div className="confirm-actions">
           <button type="button" onClick={onCancel}>
             {cancelLabel}
           </button>
-          <button type="button" className="primary" onClick={onConfirm}>
+          <button type="button" className="primary danger-btn" onClick={onConfirm}>
             {confirmLabel}
           </button>
         </div>

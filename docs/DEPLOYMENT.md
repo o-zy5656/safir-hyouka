@@ -131,17 +131,47 @@ DATABASE_URL=postgresql+psycopg://safir:＜DBパスワード＞@127.0.0.1:5432/s
 SECRET_KEY=＜openssl rand -hex 32 で生成＞
 ACCESS_TOKEN_EXPIRE_MINUTES=480
 DEV_ALLOW_UNSUBMIT=false
+PRODUCTION_MODE=true
 DEFAULT_EMPLOYEE_PASSWORD=changeme123
 TEMPLATES_DIR=templates
+DEFAULT_FACILITY_FILTER=サフィールいなは
+ADMIN_JOB_TITLES=施設長
+HQ_EVALUATOR_EMPLOYEE_ID=hq001
+RETIRED_ARCHIVES_DIR=data/retired_employees
 ```
 
 | 変数 | 本番の値 |
 |------|----------|
 | `SECRET_KEY` | 必ずランダムな長い文字列に変更 |
 | `DEV_ALLOW_UNSUBMIT` | **false**（開発用の提出取消を無効化） |
+| `PRODUCTION_MODE` | **true**（設定漏れを起動時に検出） |
 | `DEFAULT_EMPLOYEE_PASSWORD` | 社員取込時の初期パスワード（運用方針に合わせて変更） |
 
-### 初回 DB 初期化（管理者のみ）
+設定確認:
+
+```bash
+cd backend && source .venv/bin/activate
+python -m scripts.preflight_production
+```
+
+### 初回 DB 初期化
+
+**サフィールいなは（名簿 Excel がある場合 — 推奨）**
+
+```bash
+# 名簿をサーバーに配置（例）
+scp 名簿.xlsx safir@hyouka-server:/opt/safir_hyouka/data/meibo.xlsx
+
+cd /opt/safir_hyouka/backend
+source .venv/bin/activate
+export ROSTER_XLSX_PATH=/opt/safir_hyouka/data/meibo.xlsx
+python -m scripts.import_inaha_roster
+# 再取込時: python -m scripts.import_inaha_roster --force
+```
+
+取込後、施設長 **i9213** などで管理画面にログイン。初期パスワードは `DEFAULT_EMPLOYEE_PASSWORD`。
+
+**汎用（管理者のみ先に作る場合）**
 
 ```bash
 export ADMIN_EMPLOYEE_ID=ADMIN001
@@ -272,9 +302,70 @@ cd .. && ./scripts/build_prod.sh
 sudo systemctl restart safir-hyouka-api
 ```
 
-DB スキーマ変更がある場合は、起動時に `create_all` で不足テーブルが追加されます（v1 はマイグレーションツール未使用）。
+DB スキーマ変更がある場合は `alembic upgrade head`（初回は `alembic stamp head`）。起動時の `migrate_schema()` も後方互換のため実行されます。
 
-## 14. トラブルシューティング
+## 14. サフィールいなは — テストサーバー → パイロット
+
+### サーバーがまだない場合（今すぐできること）
+
+テストサーバー調達前でも、**Mac 上で本番に近い構成**を試せます。
+
+| 順 | 内容 | コマンド / 場所 |
+|----|------|-----------------|
+| 1 | **現状の開発環境でパイロット** | すでに動いている SQLite + 名簿データで、i1005 / i9213 等で操作確認 |
+| 2 | **PostgreSQL リハーサル** | Docker Desktop 起動後: `./scripts/rehearse_production_local.sh` |
+| 3 | **UAT 再実行** | `cd backend && python -m scripts.run_uat` |
+| 4 | **チェックリスト** | `docs/UAT_CHECKLIST.md` セクション1〜6 |
+
+リハーサルスクリプトは PostgreSQL + `PRODUCTION_MODE=true` + 名簿取込 + フロントビルドまで一括で行います。
+
+### テストサーバー調達時の目安
+
+| 項目 | 最低限 |
+|------|--------|
+| 用途 | 社内LANのみ（インターネット非公開） |
+| OS | Ubuntu 22.04 / 24.04 LTS |
+| スペック | CPU 2コア / メモリ 4GB / SSD 20GB |
+| 候補 | 事業所内の旧PC、NAS の VM、レンタル VPS（**VPN 経由のみ**） |
+
+調達後は §1〜§13 の手順 + 下記 §14-1 以降で本番同等の確認を行います。
+
+### 14-1. ローカルからサーバーへ配置
+
+```bash
+chmod +x scripts/package_for_server.sh
+./scripts/package_for_server.sh
+# 生成された tar.gz をサーバーへ scp
+```
+
+### 14-2. テストサーバーで UAT 再実行
+
+```bash
+curl -s http://127.0.0.1/api/health
+cd backend && source .venv/bin/activate
+python -m scripts.run_uat
+```
+
+### 14-3. パイロット10名（例）
+
+| 役割 | 社員ID | 確認内容 |
+|------|--------|----------|
+| 本人A | i1005 | 自己評価 下書き→提出 |
+| 本人B | i2002 | 未入力バリデーション |
+| 評価者1 | i9212 または i3001 | 部下の考課 |
+| 施設長 | i9213 | 管理画面＋部下考課 |
+| 本部 | hq001 | 施設長の二次評価のみ |
+
+全員初期パスワード → **初回ログインで変更**を徹底。
+
+### 14-4. 本番前の必須作業
+
+- [ ] `python -m scripts.preflight_production` が OK
+- [ ] 施設長・本部のパスワード変更
+- [ ] `./deploy/backup_db.sh` を1回実行して復旧手順を確認
+- [ ] `docs/UAT_CHECKLIST.md` セクション7（PostgreSQL・nginx）をテストサーバーで実施
+
+## 15. トラブルシューティング
 
 | 症状 | 確認 |
 |------|------|
@@ -283,7 +374,7 @@ DB スキーマ変更がある場合は、起動時に `create_all` で不足テ
 | 社員取込エラー | Excel 列名・必須列（`docs/PLAN.md` 8章） |
 | 評価者が入力できない | 自己評価が提出済みか、評価者ロール・評1提出状況 |
 
-## 15. セキュリティメモ
+## 16. セキュリティメモ
 
 - サーバーへの SSH は鍵認証 + 限定ユーザーのみ
 - ファイアウォールで 80/443 を社内サブネットのみ許可

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import type { SubmissionPanel as SubmissionPanelType } from "../types";
-import { ConfirmDialog } from "./ConfirmDialog";
+import { SubmitActionBar } from "./SubmitActionBar";
 
 interface Props {
   submission: SubmissionPanelType;
-  onSave?: () => void;
+  onSave?: () => void | Promise<void>;
   onSubmit?: () => void;
   onDevUnsubmit?: () => void;
   onValidate?: () => string[];
@@ -28,26 +28,23 @@ export function SubmissionPanel({
   formData,
   saving,
 }: Props) {
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
 
   useEffect(() => {
-    setValidationErrors([]);
+    // reset notice when form changes
+    setSaveNotice(null);
   }, [formData]);
 
-  const handleSubmitClick = () => {
-    const errors = onValidate?.() ?? [];
-    if (errors.length > 0) {
-      setValidationErrors(errors);
-      return;
+  const handleSaveClick = async () => {
+    if (!onSave) return;
+    try {
+      await onSave();
+      const now = new Date().toLocaleString("ja-JP");
+      setSaveNotice(`下書きを保存しました（${now}）`);
+      window.setTimeout(() => setSaveNotice(null), 4000);
+    } catch {
+      setSaveNotice(null);
     }
-    setValidationErrors([]);
-    setShowConfirm(true);
-  };
-
-  const handleConfirmSubmit = () => {
-    setShowConfirm(false);
-    onSubmit?.();
   };
 
   return (
@@ -56,6 +53,11 @@ export function SubmissionPanel({
       <p className="status-badge" data-status={submission.status}>
         {statusLabel[submission.status] ?? submission.status}
       </p>
+      {saveNotice && (
+        <p className="success save-notice" role="status" aria-live="polite">
+          {saveNotice}
+        </p>
+      )}
       {submission.deadline && (
         <p>
           <strong>期限:</strong> {new Date(submission.deadline).toLocaleString("ja-JP")}
@@ -66,28 +68,14 @@ export function SubmissionPanel({
           <strong>提出日時:</strong> {new Date(submission.submitted_at).toLocaleString("ja-JP")}
         </p>
       )}
-      {validationErrors.length > 0 && (
-        <div className="validation-errors" role="alert">
-          <strong>未入力のため提出できません</strong>
-          <ul>
-            {validationErrors.map((msg) => (
-              <li key={msg}>{msg}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <div className="button-row">
-        {onSave && submission.can_edit && (
-          <button type="button" onClick={onSave} disabled={saving}>
-            下書き保存
-          </button>
-        )}
-        {onSubmit && submission.can_submit && (
-          <button type="button" className="primary" onClick={handleSubmitClick} disabled={saving}>
-            提出する
-          </button>
-        )}
-      </div>
+      <SubmitActionBar
+        canEdit={submission.can_edit}
+        canSubmit={submission.can_submit}
+        onSave={onSave ? handleSaveClick : undefined}
+        onSubmit={onSubmit}
+        onValidate={onValidate}
+        saving={saving}
+      />
       {submission.status === "submitted" && (
         <>
           <p className="hint">提出後は編集できません。修正が必要な場合は人事に差し戻しを依頼してください。</p>
@@ -101,16 +89,6 @@ export function SubmissionPanel({
       {submission.status === "returned" && (
         <p className="hint">差し戻されました。内容を修正して再度提出してください。</p>
       )}
-
-      <ConfirmDialog
-        open={showConfirm}
-        title="提出の確認"
-        message="提出すると内容の編集ができなくなります。本当に提出してよろしいですか？"
-        confirmLabel="提出する"
-        cancelLabel="キャンセル"
-        onConfirm={handleConfirmSubmit}
-        onCancel={() => setShowConfirm(false)}
-      />
     </section>
   );
 }

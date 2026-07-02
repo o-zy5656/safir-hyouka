@@ -4,6 +4,7 @@ import type { WorkspaceResponse } from "../types";
 import { AttributePanel } from "./AttributePanel";
 import { EvaluationForm } from "./EvaluationForm";
 import { SubmissionPanel } from "./SubmissionPanel";
+import { SubmitActionBar } from "./SubmitActionBar";
 import { ThreePaneLayout } from "./ThreePaneLayout";
 import { validateFormData } from "../utils/formValidation";
 
@@ -89,6 +90,16 @@ export function EvaluateeWorkspace() {
             formData={formData}
             editable={workspace.submission.can_edit}
             onChange={setFormData}
+            footer={
+              <SubmitActionBar
+                canEdit={workspace.submission.can_edit}
+                canSubmit={workspace.submission.can_submit}
+                onSave={workspace.submission.can_edit ? handleSave : undefined}
+                onSubmit={workspace.submission.can_submit ? handleSubmit : undefined}
+                onValidate={() => validateFormData(workspace.template, formData)}
+                saving={saving}
+              />
+            }
           />
         }
         right={

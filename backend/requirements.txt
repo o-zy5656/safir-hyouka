@@ -9,3 +9,7 @@ passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
 python-multipart==0.0.19
 openpyxl==3.1.5
+msoffcrypto-tool==5.4.2
+pytest==8.3.4
+httpx==0.28.1
+alembic==1.14.0

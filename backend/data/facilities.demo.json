@@ -1,0 +1,26 @@
+{
+  "facilities": [
+    {
+      "key": "inaha",
+      "label": "デモ施設いなは",
+      "assignment_match": "デモ施設いなは",
+      "enabled": true,
+      "bonus": {
+        "layout": "default",
+        "provision_monthly": 1100,
+        "provision_months": 6
+      }
+    },
+    {
+      "key": "sohara",
+      "label": "デモ施設そはら",
+      "assignment_match": "デモ施設そはら",
+      "enabled": true,
+      "bonus": {
+        "layout": "default",
+        "provision_monthly": 800,
+        "provision_months": 12
+      }
+    }
+  ]
+}

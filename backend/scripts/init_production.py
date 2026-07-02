@@ -14,8 +14,50 @@ import os
 import sys
 
 from app.database import Base, SessionLocal, engine
-from app.main import hash_password, load_assessment_template, load_self_template
+from app.main import (
+    hash_password,
+    load_assessment_template,
+    load_facility_director_assessment_template,
+    load_facility_director_self_template,
+    load_self_template,
+    migrate_schema,
+)
 from app.models import FormTemplate, TemplateType, User, UserRole
+
+
+def ensure_templates(db):
+    if db.query(FormTemplate).first():
+        return
+    db.add_all(
+        [
+            FormTemplate(
+                type=TemplateType.SELF_EVALUATION,
+                version=load_self_template().get("version", "1.0.0"),
+                name=load_self_template().get("title", "自己評価表"),
+                content=load_self_template(),
+            ),
+            FormTemplate(
+                type=TemplateType.ASSESSMENT,
+                version=load_assessment_template().get("version", "1.0.0"),
+                name=load_assessment_template().get("title", "考課表"),
+                content=load_assessment_template(),
+            ),
+            FormTemplate(
+                type=TemplateType.SELF_EVALUATION,
+                version=load_facility_director_self_template().get("version", "1.0.0"),
+                name=load_facility_director_self_template().get("title", "施設長自己評価表"),
+                content=load_facility_director_self_template(),
+            ),
+            FormTemplate(
+                type=TemplateType.ASSESSMENT,
+                version=load_facility_director_assessment_template().get("version", "1.0.0"),
+                name=load_facility_director_assessment_template().get("title", "施設長考課表"),
+                content=load_facility_director_assessment_template(),
+            ),
+        ]
+    )
+    db.flush()
+    print("評価表テンプレート（一般＋施設長）を登録しました。")
 
 
 def main():
@@ -29,33 +71,18 @@ def main():
         sys.exit(1)
 
     Base.metadata.create_all(bind=engine)
+    migrate_schema()
     db = SessionLocal()
 
     existing_admin = db.query(User).filter(User.role == UserRole.ADMIN).first()
     if existing_admin:
         print(f"管理者は既に存在します: {existing_admin.employee_id}")
         print("追加の管理者が必要な場合は DB または管理手順で作成してください。")
+        ensure_templates(db)
+        db.commit()
         return
 
-    if not db.query(FormTemplate).first():
-        db.add_all(
-            [
-                FormTemplate(
-                    type=TemplateType.SELF_EVALUATION,
-                    version=load_self_template().get("version", "1.0.0"),
-                    name=load_self_template().get("title", "自己評価表"),
-                    content=load_self_template(),
-                ),
-                FormTemplate(
-                    type=TemplateType.ASSESSMENT,
-                    version=load_assessment_template().get("version", "1.0.0"),
-                    name=load_assessment_template().get("title", "考課表"),
-                    content=load_assessment_template(),
-                ),
-            ]
-        )
-        db.flush()
-        print("評価表テンプレートを登録しました。")
+    ensure_templates(db)
 
     admin = User(
         employee_id=admin_id,
@@ -68,9 +95,10 @@ def main():
     print("本番初期化が完了しました。")
     print(f"  管理者ログイン: {admin_id}")
     print("  次の作業:")
-    print("    1. 管理画面で考課期間を作成・開始")
-    print("    2. 社員 Excel を取込")
-    print("    3. 評価者アカウントのロール設定（必要に応じて DB で evaluator1/2 に変更）")
+    print("    1. python -m scripts.preflight_production で設定確認")
+    print("    2. 名簿取込: python -m scripts.import_inaha_roster /path/to/名簿.xlsx")
+    print("       （または管理画面から名簿 Excel をアップロード）")
+    print("    3. 施設長（例: i9213）で管理画面にログインし動作確認")
 
 
 if __name__ == "__main__":
