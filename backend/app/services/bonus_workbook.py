@@ -44,11 +44,9 @@ def _get_preset(facility_key: str, wb: Any = None) -> dict[str, Any]:
     if wb is not None:
         sheet_names = list(wb.sheetnames)
     else:
-        try:
-            opened = _open_workbook(data_only=True)
+        opened = _try_open_workbook(data_only=True)
+        if opened is not None:
             sheet_names = list(opened.sheetnames)
-        except FileNotFoundError:
-            sheet_names = []
     return build_bonus_preset(facility_key, sheet_names=sheet_names)
 
 
@@ -536,7 +534,7 @@ def _load_directors_bonus_rows(db: Session) -> tuple[list[dict[str, Any]], str]:
     directors = _collect_all_facility_directors(db)
     evaluations = _active_period_evaluations(db)
     aliases = _load_bonus_aliases()
-    wb = _open_workbook(data_only=True)
+    wb = _try_open_workbook(data_only=True)
     rows: list[dict[str, Any]] = []
 
     for index, employee in enumerate(directors):
@@ -557,7 +555,7 @@ def _load_directors_bonus_rows(db: Session) -> tuple[list[dict[str, Any]], str]:
         note = ""
         row_number = 1_000_000 + index
 
-        if facility and facility.bonus_enabled:
+        if facility and facility.bonus_enabled and wb is not None:
             preset = _get_preset(facility.key, wb)
             data_sheet = preset.get("data_sheet")
             if not data_sheet or data_sheet not in wb.sheetnames:
@@ -733,6 +731,16 @@ def _open_workbook(*, data_only: bool = False):
     return load_workbook(decrypted, data_only=data_only)
 
 
+def _try_open_workbook(*, data_only: bool = False):
+    """Excel テンプレートが無いデモ環境では None を返す。"""
+    if not settings.bonus_workbook_template_path.strip():
+        return None
+    try:
+        return _open_workbook(data_only=data_only)
+    except FileNotFoundError:
+        return None
+
+
 def _save_workbook(wb) -> None:
     template_path = _template_path()
     backup_path = template_path.with_suffix(template_path.suffix + ".bak")
@@ -808,11 +816,7 @@ def load_bonus_workbook_rows(
         return _load_directors_bonus_rows(db)
 
     facility = get_enabled_facility(facility_key)
-    wb = None
-    try:
-        wb = _open_workbook(data_only=True)
-    except FileNotFoundError:
-        wb = None
+    wb = _try_open_workbook(data_only=True)
 
     preset = _get_preset(facility_key, wb)
     data_sheet = preset.get("data_sheet")

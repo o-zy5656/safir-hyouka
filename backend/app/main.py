@@ -14,7 +14,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from app.config import settings
-from app.database import Base, engine, get_db
+from app.database import Base, SessionLocal, engine, get_db
 from app.models import (
     AuditLog,
     Employee,
@@ -491,7 +491,28 @@ def on_startup():
     if settings.auto_seed_demo:
         from scripts.seed_demo import seed
 
-        seed()
+        seed(force=_needs_demo_reseed())
+
+
+def _needs_demo_reseed() -> bool:
+    """デモ DB に架空名簿が無い場合は再投入する。"""
+    if not settings.demo_mode:
+        return False
+    db = SessionLocal()
+    try:
+        if not db.query(User).filter(User.employee_id == "ADMIN001").first():
+            return True
+        has_demo_staff = (
+            db.query(Employee)
+            .filter(
+                Employee.employment_status == EmploymentStatus.ACTIVE,
+                Employee.assignment.contains("デモ施設"),
+            )
+            .first()
+        )
+        return has_demo_staff is None
+    finally:
+        db.close()
 
 
 @app.get("/api/health")
