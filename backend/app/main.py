@@ -119,13 +119,17 @@ from app.services.template_validator import load_template_file
 
 app = FastAPI(title="サフィール人事考課 API", version="0.1.0")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origin_list,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+_cors_kwargs: dict = {
+    "allow_origins": settings.cors_origin_list,
+    "allow_credentials": True,
+    "allow_methods": ["*"],
+    "allow_headers": ["*"],
+}
+if settings.demo_mode:
+    # 公開デモ: Vercel の本番・プレビュー URL を CORS_ORIGINS 未設定でも許可
+    _cors_kwargs["allow_origin_regex"] = r"https://[\w.-]+\.vercel\.app"
+
+app.add_middleware(CORSMiddleware, **_cors_kwargs)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
