@@ -3,404 +3,897 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>サフィール人事考課システム — 課題提出用図解</title>
+  <title>サフィール人事考課システム — 図解</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    @page { size: A4 portrait; margin: 10mm; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
-      font-size: 9pt;
-      line-height: 1.45;
-      color: #1a1a1a;
-      background: #eceff3;
-      padding: 14px;
-    }
-    .page {
-      max-width: 210mm;
-      margin: 0 auto 14px;
-      background: #fff;
-      padding: 11mm 12mm;
-      box-shadow: 0 2px 10px rgba(0,0,0,.12);
-      page-break-after: always;
-    }
-    .page:last-child { page-break-after: auto; }
-    @media print {
-      body { background: #fff; padding: 0; }
-      .page { box-shadow: none; margin: 0; padding: 0; }
-      .no-print { display: none; }
+    :root {
+      --bg: #0b1020;
+      --surface: rgba(255, 255, 255, 0.06);
+      --surface-2: rgba(255, 255, 255, 0.1);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #818cf8;
+      --accent-2: #34d399;
+      --accent-3: #f472b6;
+      --accent-4: #fbbf24;
+      --glow: 0 24px 80px rgba(99, 102, 241, 0.18);
+      --radius: 20px;
+      --radius-sm: 12px;
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 2.5px solid #2563eb;
-      padding-bottom: 6px;
-      margin-bottom: 8px;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Sans JP", "DM Sans", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
     }
-    .header h1 { font-size: 14pt; color: #1e40af; }
-    .header .meta { font-size: 8pt; color: #555; text-align: right; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99, 102, 241, 0.35), transparent),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(244, 114, 182, 0.2), transparent),
+        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(52, 211, 153, 0.15), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 48px 0 40px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 12px var(--accent-2);
+    }
+
+    h1 {
+      font-family: "DM Sans", "Noto Sans JP", sans-serif;
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #fff 0%, #c7d2fe 50%, #fbcfe8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 24px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta span {
+      padding: 6px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .url-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .url-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .url-chip:hover { transform: translateY(-2px); }
+
+    .url-chip.primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      box-shadow: var(--glow);
+    }
+
+    .url-chip.secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    /* Sections */
+    section { margin-top: 56px; }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      font-family: "DM Sans", sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      opacity: 0.9;
+    }
 
     h2 {
-      font-size: 10pt;
-      color: #1e40af;
-      border-left: 4px solid #2563eb;
-      padding-left: 6px;
-      margin: 8px 0 5px;
-    }
-    h3 { font-size: 8.5pt; color: #374151; margin: 4px 0 3px; }
-
-    .lead {
-      background: #eff6ff;
-      border: 1px solid #93c5fd;
-      border-radius: 5px;
-      padding: 6px 8px;
-      margin-bottom: 8px;
-      font-size: 8.5pt;
+      font-family: "DM Sans", "Noto Sans JP", sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
     }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-
-    .box {
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-      padding: 6px 7px;
-      background: #fafafa;
+    .lead-card {
+      padding: 24px 28px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(244, 114, 182, 0.08));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      font-size: 0.95rem;
     }
-    .box.blue { background: #eff6ff; border-color: #93c5fd; }
-    .box.green { background: #ecfdf5; border-color: #6ee7b7; }
-    .box.amber { background: #fffbeb; border-color: #fcd34d; }
-    .box.rose { background: #fff1f2; border-color: #fda4af; }
+
+    .lead-card strong { color: #e0e7ff; }
 
     /* Architecture */
-    .arch { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8pt; }
-    .arch-row { display: flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; }
-    .arch-box {
-      border: 1.5px solid #374151;
-      border-radius: 4px;
-      padding: 4px 8px;
+    .arch-flow {
+      display: grid;
+      gap: 12px;
+      padding: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .arch-layer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .arch-node {
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
       text-align: center;
-      background: #fff;
-      min-width: 110px;
+      min-width: 140px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.6);
     }
-    .arch-box.ui { border-color: #2563eb; background: #eff6ff; }
-    .arch-box.api { border-color: #7c3aed; background: #f5f3ff; }
-    .arch-box.db { border-color: #059669; background: #ecfdf5; }
-    .arch-box.file { border-color: #d97706; background: #fffbeb; }
-    .arrow { color: #6b7280; font-size: 8pt; }
 
-    /* Screenshots */
-    .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-    figure {
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-      overflow: hidden;
-      background: #fff;
+    .arch-node strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
     }
-    figure img { width: 100%; display: block; border-bottom: 1px solid #e5e7eb; }
-    figcaption {
-      font-size: 7.5pt;
-      padding: 4px 6px;
-      color: #374151;
-      background: #f9fafb;
+
+    .arch-node span {
+      font-size: 0.75rem;
+      color: var(--muted);
     }
-    figcaption strong { color: #1e40af; }
 
-    table { width: 100%; border-collapse: collapse; font-size: 8pt; }
-    th, td { border: 1px solid #d1d5db; padding: 3px 5px; vertical-align: top; }
-    th { background: #f3f4f6; text-align: left; white-space: nowrap; }
+    .arch-node.ui { border-color: rgba(129, 140, 248, 0.5); box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.15); }
+    .arch-node.api { border-color: rgba(167, 139, 250, 0.5); }
+    .arch-node.db { border-color: rgba(52, 211, 153, 0.5); }
+    .arch-node.file { border-color: rgba(251, 191, 36, 0.4); }
 
-    ul { padding-left: 1.2em; }
-    li { margin-bottom: 2px; }
+    .arch-arrow {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+    }
 
-    .tag {
+    .arch-plus { color: var(--muted); font-size: 1.2rem; }
+
+    /* Roles */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .role-card {
+      padding: 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .role-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(129, 140, 248, 0.4);
+    }
+
+    .role-badge {
       display: inline-block;
-      font-size: 7pt;
-      padding: 1px 5px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
       border-radius: 999px;
-      background: #dbeafe;
-      color: #1d4ed8;
-      margin-right: 3px;
+      margin-bottom: 10px;
     }
 
-    .flow {
+    .role-card:nth-child(1) .role-badge { background: rgba(52, 211, 153, 0.2); color: #6ee7b7; }
+    .role-card:nth-child(2) .role-badge { background: rgba(96, 165, 250, 0.2); color: #93c5fd; }
+    .role-card:nth-child(3) .role-badge { background: rgba(251, 191, 36, 0.2); color: #fcd34d; }
+    .role-card:nth-child(4) .role-badge { background: rgba(167, 139, 250, 0.2); color: #c4b5fd; }
+    .role-card:nth-child(5) .role-badge { background: rgba(244, 114, 182, 0.2); color: #f9a8d4; }
+
+    .role-card h3 { font-size: 0.95rem; margin-bottom: 6px; }
+    .role-card p { font-size: 0.8rem; color: var(--muted); }
+
+    /* Timeline */
+    .timeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .timeline-step {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .timeline-arrow { color: var(--muted); font-size: 0.8rem; }
+
+    .flow-note {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .flow-note div {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+    .flow-note strong { color: var(--accent-2); }
+
+    /* Screenshots — bento */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .shot {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #111827;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .shot:hover {
+      transform: scale(1.01);
+      box-shadow: 0 28px 60px rgba(99, 102, 241, 0.2);
+    }
+
+    .shot img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .shot-label {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      right: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+    }
+
+    .shot-label strong {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+
+    .shot-label span {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .shot-a { grid-column: span 7; }
+    .shot-b { grid-column: span 5; }
+    .shot-c { grid-column: span 4; }
+    .shot-d { grid-column: span 4; }
+    .shot-e { grid-column: span 4; }
+    .shot-f { grid-column: span 12; }
+    .shot-f img { aspect-ratio: 21/9; }
+
+    @media (max-width: 768px) {
+      .shot-a, .shot-b, .shot-c, .shot-d, .shot-e, .shot-f { grid-column: span 12; }
+    }
+
+    /* Data cards */
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .data-card {
+      padding: 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+    }
+
+    .data-card:nth-child(2) { border-left-color: var(--accent-2); }
+    .data-card:nth-child(3) { border-left-color: var(--accent-3); }
+    .data-card:nth-child(4) { border-left-color: var(--accent-4); }
+    .data-card:nth-child(5) { border-left-color: #60a5fa; }
+    .data-card:nth-child(6) { border-left-color: #a78bfa; }
+    .data-card:nth-child(7) { border-left-color: #fb7185; }
+
+    .data-card h3 {
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+    }
+
+    .data-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+    .data-card .example {
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      color: #cbd5e1;
+    }
+
+    /* Storage */
+    .storage-list { display: grid; gap: 12px; }
+
+    .storage-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 16px;
+      padding: 20px;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      align-items: start;
+    }
+
+    @media (max-width: 600px) {
+      .storage-item { grid-template-columns: 1fr; }
+    }
+
+    .storage-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      font-size: 7.5pt;
-      margin: 4px 0;
-    }
-    .flow-step {
-      border: 1px solid #9ca3af;
-      border-radius: 4px;
-      padding: 2px 6px;
-      background: #fff;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
     }
 
-    .no-print {
-      max-width: 210mm;
-      margin: 0 auto 10px;
-      padding: 8px 10px;
-      background: #fef3c7;
-      border: 1px solid #fcd34d;
-      border-radius: 6px;
-      font-size: 8.5pt;
+    .storage-item:nth-child(1) .storage-icon { background: rgba(52, 211, 153, 0.2); }
+    .storage-item:nth-child(2) .storage-icon { background: rgba(251, 191, 36, 0.2); }
+    .storage-item:nth-child(3) .storage-icon { background: rgba(96, 165, 250, 0.2); }
+    .storage-item:nth-child(4) .storage-icon { background: rgba(167, 139, 250, 0.2); }
+    .storage-item:nth-child(5) .storage-icon { background: rgba(244, 114, 182, 0.2); }
+
+    .storage-item h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .storage-item code {
+      font-size: 0.72rem;
+      color: #a5b4fc;
+      display: block;
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+
+    .storage-item p { font-size: 0.82rem; color: var(--muted); }
+
+    .insight-banner {
+      margin-top: 16px;
+      padding: 18px 22px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.12), rgba(52, 211, 153, 0.08));
+      border: 1px solid rgba(129, 140, 248, 0.25);
+      font-size: 0.88rem;
+    }
+
+    /* Insights */
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 700px) {
+      .insight-grid { grid-template-columns: 1fr; }
+    }
+
+    .insight-box {
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .insight-box.win {
+      background: linear-gradient(160deg, rgba(52, 211, 153, 0.12), rgba(15, 23, 42, 0.5));
+      border-color: rgba(52, 211, 153, 0.25);
+    }
+
+    .insight-box.struggle {
+      background: linear-gradient(160deg, rgba(244, 114, 182, 0.1), rgba(15, 23, 42, 0.5));
+      border-color: rgba(244, 114, 182, 0.25);
+    }
+
+    .insight-box h3 {
+      font-size: 1rem;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .insight-box ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .insight-box li {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .insight-box li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .insight-box.win li::before { background: var(--accent-2); }
+    .insight-box.struggle li::before { background: var(--accent-3); }
+
+    .insight-box li strong { color: #f1f5f9; }
+
+    /* Tech pills */
+    .tech-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .tech-pill {
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .tech-pill strong { display: block; font-size: 0.85rem; margin-bottom: 4px; }
+    .tech-pill span { font-size: 0.75rem; color: var(--muted); }
+
+    footer {
+      margin-top: 64px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: #a5b4fc; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media print {
+      body { background: #fff; color: #111; }
+      body::before { display: none; }
+      .url-chip, .shot { box-shadow: none; }
+      .hero-meta, .url-row { display: none; }
     }
   </style>
 </head>
 <body>
-  <p class="no-print">
-    <strong>提出用 URL：</strong>
-    <a href="https://safir-hyouka.vercel.app/assignment/">https://safir-hyouka.vercel.app/assignment/</a>
-    （印刷が必要な場合は Chrome の「印刷 → PDF に保存」）
-  </p>
-
-  <!-- ===== PAGE 1 ===== -->
-  <div class="page">
-    <header class="header">
-      <div>
-        <h1>サフィール人事考課・賞与表システム</h1>
-        <p style="font-size:8.5pt;color:#555;margin-top:2px;">safir_hyouka — 課題提出用 図解資料</p>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow"><span></span> safir_hyouka / 課題提出用図解</div>
+      <h1>サフィール人事考課<br/>・賞与表システム</h1>
+      <p class="hero-sub">
+        介護施設の考課と賞与を、ロールごとに分けて Web 上で扱えるツール。
+        ログイン不要の公開デモで、5つの役割を切り替えて体験できます。
+      </p>
+      <div class="hero-meta">
+        <span>氏名（記入）：＿＿＿＿＿＿＿＿</span>
+        <span>所属（記入）：＿＿＿＿＿＿＿＿</span>
+        <span>2026.7.3</span>
       </div>
-      <div class="meta">
-        <span>氏名：（　　　　　　　　　　）</span>
-        <span>所属：（　　　　　　　　　　）</span>
-        <span>作成日：2026年7月3日</span>
-        <span>公開デモ：https://safir-hyouka.vercel.app</span>
-        <span>図解 URL：https://safir-hyouka.vercel.app/assignment/</span>
+      <div class="url-row">
+        <a class="url-chip primary" href="https://safir-hyouka.vercel.app/assignment/">📄 この図解ページ</a>
+        <a class="url-chip secondary" href="https://safir-hyouka.vercel.app">🚀 デモを開く</a>
       </div>
     </header>
 
-    <div class="lead">
-      介護施設グループの<strong>人事考課（自己評価・評価者考課・本部考課）</strong>と<strong>賞与表管理</strong>を Web 化したツール。
-      ロール別の権限制御、年度別の賞与データ保存、公開デモ（ログイン不要・役割切替）まで実装した。
+    <div class="lead-card">
+      <strong>人事考課</strong>（自己評価 → リーダー考課 → 本部考課）と
+      <strong>賞与表</strong>（施設長の案 → 本部の確定 → 引当金チェック）をひとつに。
+      現場の Excel 文化を残しつつ、Web ならではの権限分けとリアルタイム集計を実現しました。
     </div>
 
-    <h2>① システム全体構成</h2>
-    <div class="box blue">
-      <div class="arch">
-        <div class="arch-row">
-          <div class="arch-box ui"><strong>ブラウザ UI</strong><br/>React + TypeScript<br/><span style="color:#555;">Vercel 公開</span></div>
+    <!-- Architecture -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>システム構成</h2>
+      </div>
+      <div class="arch-flow">
+        <div class="arch-layer">
+          <div class="arch-node ui">
+            <strong>React UI</strong>
+            <span>TypeScript · Vercel</span>
+          </div>
         </div>
-        <div class="arrow">▼ HTTPS / REST API ▼</div>
-        <div class="arch-row">
-          <div class="arch-box api"><strong>API サーバー</strong><br/>FastAPI + Python<br/><span style="color:#555;">Railway 公開</span></div>
+        <div class="arch-arrow">— REST API —</div>
+        <div class="arch-layer">
+          <div class="arch-node api">
+            <strong>FastAPI</strong>
+            <span>Python · Railway</span>
+          </div>
         </div>
-        <div class="arrow">▼ 読み書き ▼</div>
-        <div class="arch-row">
-          <div class="arch-box db"><strong>PostgreSQL</strong><br/>名簿・考課・ユーザー</div>
-          <span class="arrow">＋</span>
-          <div class="arch-box file"><strong>JSON ファイル</strong><br/>賞与金額・引当金</div>
-          <span class="arrow">＋</span>
-          <div class="arch-box file"><strong>設定 JSON</strong><br/>施設マスタ</div>
+        <div class="arch-arrow">— データ —</div>
+        <div class="arch-layer">
+          <div class="arch-node db"><strong>PostgreSQL</strong><span>名簿・考課</span></div>
+          <span class="arch-plus">+</span>
+          <div class="arch-node file"><strong>JSON</strong><span>賞与・引当金</span></div>
+          <span class="arch-plus">+</span>
+          <div class="arch-node file"><strong>設定 JSON</strong><span>8施設マスタ</span></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="grid-2" style="margin-top:7px;">
-      <section>
-        <h2>② 主な画面とロール</h2>
-        <table>
-          <tr><th>ロール</th><th>主な画面</th><th>できること</th></tr>
-          <tr><td>一般職員</td><td>自己評価</td><td>自己評価表の入力・提出</td></tr>
-          <tr><td>リーダー</td><td>部下の考課</td><td>一次評価（評価者1）の入力</td></tr>
-          <tr><td>施設長</td><td>賞与表 / 自己評価</td><td>賞与案・引当金の入力、考課反映</td></tr>
-          <tr><td>本部</td><td>本部考課 / 賞与表</td><td>二次評価、確定賞与の入力</td></tr>
-          <tr><td>管理者</td><td>管理画面 / 賞与表</td><td>期間管理・名簿・ユーザー管理</td></tr>
-        </table>
-        <p style="font-size:7.5pt;margin-top:4px;color:#555;">
-          公開デモでは画面上部の「デモ役割」から5役割を切り替え可能（パスワード不要）。
-        </p>
-      </section>
-      <section>
-        <h2>③ 典型的なデータの流れ</h2>
-        <div class="flow">
-          <span class="flow-step">① 名簿登録</span>→
-          <span class="flow-step">② 自己評価提出</span>→
-          <span class="flow-step">③ 評価者考課</span>→
-          <span class="flow-step">④ 本部考課</span>→
-          <span class="flow-step">⑤ 賞与表へ反映</span>→
-          <span class="flow-step">⑥ 金額確定</span>
+    <!-- Roles + Flow -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>ロールとデータの流れ</h2>
+      </div>
+      <div class="role-grid">
+        <div class="role-card">
+          <span class="role-badge">GENERAL</span>
+          <h3>一般職員</h3>
+          <p>自己評価の入力・提出</p>
         </div>
-        <div class="box" style="margin-top:5px;font-size:8pt;">
-          <strong>考課データ</strong> → PostgreSQL（正規データ）<br/>
-          <strong>賞与金額・引当金</strong> → JSON（年度別・ロール別編集）<br/>
-          <strong>施設設定</strong> → facilities.json（コード変更なしで8施設対応）
+        <div class="role-card">
+          <span class="role-badge">LEADER</span>
+          <h3>リーダー</h3>
+          <p>部下の一次考課（評価者1）</p>
         </div>
-      </section>
-    </div>
+        <div class="role-card">
+          <span class="role-badge">DIRECTOR</span>
+          <h3>施設長</h3>
+          <p>賞与案・引当金・考課反映</p>
+        </div>
+        <div class="role-card">
+          <span class="role-badge">HQ</span>
+          <h3>本部</h3>
+          <p>二次考課・確定賞与</p>
+        </div>
+        <div class="role-card">
+          <span class="role-badge">ADMIN</span>
+          <h3>管理者</h3>
+          <p>期間・名簿・ユーザー管理</p>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <div class="timeline">
+          <span class="timeline-step">名簿</span><span class="timeline-arrow">→</span>
+          <span class="timeline-step">自己評価</span><span class="timeline-arrow">→</span>
+          <span class="timeline-step">評価者考課</span><span class="timeline-arrow">→</span>
+          <span class="timeline-step">本部考課</span><span class="timeline-arrow">→</span>
+          <span class="timeline-step">賞与表反映</span><span class="timeline-arrow">→</span>
+          <span class="timeline-step">金額確定</span>
+        </div>
+        <div class="flow-note">
+          <div><strong>考課</strong> → PostgreSQL</div>
+          <div><strong>賞与金額</strong> → JSON（年度別）</div>
+          <div><strong>施設設定</strong> → facilities.json</div>
+        </div>
+      </div>
+    </section>
 
-    <h2>④ ツール画面キャプチャ</h2>
-    <div class="shots">
-      <figure>
-        <img src="assignment-figures/01-bonus-admin.png" alt="賞与表（管理者）" />
-        <figcaption><strong>賞与表（管理者・本部視点）</strong> — 全施設の一覧、引当金サマリー、確定賞与の入力</figcaption>
-      </figure>
-      <figure>
-        <img src="assignment-figures/06-director-bonus.png" alt="賞与表（施設長）" />
-        <figcaption><strong>賞与表（施設長）</strong> — 自施設のみ。賞与案・引当金を編集（自動保存）</figcaption>
-      </figure>
-      <figure>
-        <img src="assignment-figures/02-hq-evaluator.png" alt="本部考課" />
-        <figcaption><strong>本部考課</strong> — 二次評価者が部下の考課を確認・入力</figcaption>
-      </figure>
-      <figure>
-        <img src="assignment-figures/03-evaluator-leader.png" alt="部下の考課" />
-        <figcaption><strong>部下の考課（リーダー）</strong> — 評価者1として一次考課を実施</figcaption>
-      </figure>
-      <figure>
-        <img src="assignment-figures/04-employee-self-eval.png" alt="自己評価" />
-        <figcaption><strong>自己評価（一般職員）</strong> — 10項目採点と所感の入力・提出</figcaption>
-      </figure>
-      <figure>
-        <img src="assignment-figures/05-admin-workspace.png" alt="管理画面" />
-        <figcaption><strong>管理画面</strong> — 考課期間・名簿取込・評価状況の管理</figcaption>
-      </figure>
-    </div>
-  </div>
+    <!-- Screenshots -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2>画面キャプチャ</h2>
+      </div>
+      <div class="bento">
+        <div class="shot shot-a">
+          <img src="assignment-figures/01-bonus-admin.png" alt="賞与表（管理者）" />
+          <div class="shot-label">
+            <strong>賞与表 — 管理者・本部視点</strong>
+            <span>全施設一覧 / 引当金サマリー / 確定賞与</span>
+          </div>
+        </div>
+        <div class="shot shot-b">
+          <img src="assignment-figures/06-director-bonus.png" alt="賞与表（施設長）" />
+          <div class="shot-label">
+            <strong>賞与表 — 施設長</strong>
+            <span>賞与案・引当金（自動保存）</span>
+          </div>
+        </div>
+        <div class="shot shot-c">
+          <img src="assignment-figures/02-hq-evaluator.png" alt="本部考課" />
+          <div class="shot-label"><strong>本部考課</strong><span>二次評価</span></div>
+        </div>
+        <div class="shot shot-d">
+          <img src="assignment-figures/03-evaluator-leader.png" alt="部下の考課" />
+          <div class="shot-label"><strong>リーダー考課</strong><span>一次評価</span></div>
+        </div>
+        <div class="shot shot-e">
+          <img src="assignment-figures/04-employee-self-eval.png" alt="自己評価" />
+          <div class="shot-label"><strong>自己評価</strong><span>10項目＋所感</span></div>
+        </div>
+        <div class="shot shot-f">
+          <img src="assignment-figures/05-admin-workspace.png" alt="管理画面" />
+          <div class="shot-label">
+            <strong>管理画面</strong>
+            <span>考課期間・名簿取込・進捗管理</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- ===== PAGE 2 ===== -->
-  <div class="page">
-    <header class="header">
-      <h1 style="font-size:12pt;">データ設計・開発所感</h1>
-      <div class="meta"><span>サフィール人事考課システム — 図解 2/2</span></div>
-    </header>
+    <!-- Data -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2>保持できるデータ</h2>
+      </div>
+      <div class="data-grid">
+        <div class="data-card">
+          <h3>📋 名簿</h3>
+          <p>社員ID・氏名・所属・職種・役職・勤続年数・評価者</p>
+          <div class="example">例：山田 太郎 / デモ施設いなは</div>
+        </div>
+        <div class="data-card">
+          <h3>📝 考課</h3>
+          <p>自己評価・評価者1/2の採点と所感、提出状態</p>
+          <div class="example">例：10項目採点 + 哲学・スローガン</div>
+        </div>
+        <div class="data-card">
+          <h3>💰 賞与表</h3>
+          <p>順位・ランク・前年夏/冬・案/確定・引当金</p>
+          <div class="example">例：順位3 / ランクB / 480千円</div>
+        </div>
+        <div class="data-card">
+          <h3>📅 期間</h3>
+          <p>考課期間名・年度・締切・テンプレート</p>
+          <div class="example">例：令和8年度 夏季考課</div>
+        </div>
+        <div class="data-card">
+          <h3>👤 ユーザー</h3>
+          <p>ログインID・ロール・管理者/本部フラグ</p>
+          <div class="example">例：施設長 / 本部 / 管理者</div>
+        </div>
+        <div class="data-card">
+          <h3>🔍 監査</h3>
+          <p>差戻し・退職処理などの操作ログ</p>
+          <div class="example">例：誰が・いつ・何を</div>
+        </div>
+        <div class="data-card">
+          <h3>📦 退職アーカイブ</h3>
+          <p>退職時の考課スナップショット</p>
+          <div class="example">JSON + Excel</div>
+        </div>
+      </div>
+    </section>
 
-    <h2>⑤ 保持できるようにしたデータ</h2>
-    <table>
-      <tr><th>カテゴリ</th><th>保持する内容</th><th>例</th></tr>
-      <tr>
-        <td><span class="tag">名簿</span></td>
-        <td>社員ID・氏名・所属施設・職種・役職・勤続年数・評価者</td>
-        <td>山田 太郎 / デモ施設いなは / 介護職</td>
-      </tr>
-      <tr>
-        <td><span class="tag">考課</span></td>
-        <td>自己評価・評価者1/2の採点と所感、提出状態、確定日時</td>
-        <td>10項目採点、哲学・スローガン等のテキスト</td>
-      </tr>
-      <tr>
-        <td><span class="tag">賞与表</span></td>
-        <td>考課点・順位・ランク・備考・前年夏/冬・賞与案/確定・引当金</td>
-        <td>順位3位 / ランクB / 案500千円 / 確定480千円</td>
-      </tr>
-      <tr>
-        <td><span class="tag">期間</span></td>
-        <td>考課期間名・年度・季節・各締切・使用テンプレート</td>
-        <td>令和8年度 夏季考課</td>
-      </tr>
-      <tr>
-        <td><span class="tag">ユーザー</span></td>
-        <td>ログインID・ロール・管理者/本部フラグ</td>
-        <td>施設長 / 本部 / 管理者</td>
-      </tr>
-      <tr>
-        <td><span class="tag">監査</span></td>
-        <td>操作ログ（差戻し・退職処理など）</td>
-        <td>誰が・いつ・何をしたか</td>
-      </tr>
-      <tr>
-        <td><span class="tag">退職</span></td>
-        <td>退職時の考課データスナップショット（JSON + Excel）</td>
-        <td>data/retired_employees/</td>
-      </tr>
-    </table>
+    <!-- Storage -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h2>保存先と、選んだ理由</h2>
+      </div>
+      <div class="storage-list">
+        <div class="storage-item">
+          <div>
+            <div class="storage-icon">🐘</div>
+            <strong>PostgreSQL</strong>
+          </div>
+          <div>
+            <h3>名簿・考課の正データ</h3>
+            <code>employees / evaluations / users …</code>
+            <p>複数画面・複数ユーザーで共有。評価者↔部下の関係や提出状態を安全に管理するため、RDB を中核にした。</p>
+          </div>
+        </div>
+        <div class="storage-item">
+          <div>
+            <div class="storage-icon">📁</div>
+            <strong>JSON</strong>
+          </div>
+          <div>
+            <h3>賞与専用データ（年度別）</h3>
+            <code>backend/data/bonus_amounts/{施設}.json</code>
+            <p>考課とはライフサイクルが異なる（案→確定→引当金）。年度キー付き JSON なら履歴参照が容易で、Excel テンプレートとも共存できる。</p>
+          </div>
+        </div>
+        <div class="storage-item">
+          <div>
+            <div class="storage-icon">⚙️</div>
+            <strong>設定</strong>
+          </div>
+          <div>
+            <h3>施設マスタ</h3>
+            <code>facilities.json（デモは facilities.demo.json）</code>
+            <p>8施設の名称・シート名・引当金初期値をコード変更なしで差し替え。公開時は架空施設名に切替。</p>
+          </div>
+        </div>
+        <div class="storage-item">
+          <div>
+            <div class="storage-icon">📊</div>
+            <strong>Excel</strong>
+          </div>
+          <div>
+            <h3>既存テンプレート（任意）</h3>
+            <code>BONUS_WORKBOOK_TEMPLATE_PATH</code>
+            <p>現場の Excel 運用との互換・ダウンロード用。デモでは未設定でも名簿ベースで Web 表示可能。</p>
+          </div>
+        </div>
+        <div class="storage-item">
+          <div>
+            <div class="storage-icon">🌐</div>
+            <strong>Browser</strong>
+          </div>
+          <div>
+            <h3>UI 設定・セッション</h3>
+            <code>localStorage</code>
+            <p>列表示設定や JWT はクライアント側で保持。サーバー負荷を増やさずシンプルに。</p>
+          </div>
+        </div>
+      </div>
+      <div class="insight-banner">
+        💡 <strong>3層の役割分担</strong> — 考課は DB、賞与は JSON、Excel は橋渡し。
+        全部 DB に寄せる案もあったが、賞与表は試行錯誤が多く、ファイルベースの方が改善を早く回せた。
+      </div>
+    </section>
 
-    <h2>⑥ 保存先と、それを選んだ理由</h2>
-    <table>
-      <tr><th>保存先</th><th>パス / 場所</th><th>選んだ理由</th></tr>
-      <tr>
-        <td><strong>PostgreSQL</strong></td>
-        <td>Railway 上の DB<br/><code>employees</code> <code>evaluations</code> <code>users</code> 等</td>
-        <td>
-          名簿・考課はシステムの<strong>正規データ</strong>。複数画面・複数ユーザーで共有し、
-          リレーション（評価者↔部下）や提出状態を安全に管理するため。
-        </td>
-      </tr>
-      <tr>
-        <td><strong>JSON ファイル</strong></td>
-        <td><code>backend/data/bonus_amounts/{施設key}.json</code></td>
-        <td>
-          賞与は考課と<strong>ライフサイクルが異なる</strong>（施設長案→本部確定→引当金突合）。
-          年度キー付き JSON なら過去参照が容易で、Excel テンプレートと<strong>共存</strong>できる。
-          項目ごとの編集権限（案/確定/引当金）も API で細かく制御しやすい。
-        </td>
-      </tr>
-      <tr>
-        <td><strong>施設設定 JSON</strong></td>
-        <td><code>backend/data/facilities.json</code><br/>（デモは <code>facilities.demo.json</code>）</td>
-        <td>
-          8施設の名称・Excel シート名・引当金初期値を<strong>コード変更なし</strong>で差し替え可能。
-          デモ公開時は架空施設名に切替え、個人情報を載せない。
-        </td>
-      </tr>
-      <tr>
-        <td><strong>Excel テンプレート</strong></td>
-        <td><code>.env</code> の <code>BONUS_WORKBOOK_TEMPLATE_PATH</code></td>
-        <td>
-          現場の<strong>既存 Excel 運用</strong>との互換。ダウンロード用の体裁維持。
-          デモ環境では未設定でも、名簿ベースで Web 賞与表を表示できるよう対応。
-        </td>
-      </tr>
-      <tr>
-        <td><strong>ブラウザ</strong></td>
-        <td><code>localStorage</code>（列表示設定・JWT）</td>
-        <td>
-          UI 設定はサーバー不要。セッション token もクライアント保持でシンプルに実装。
-        </td>
-      </tr>
-    </table>
-
-    <div class="box blue" style="margin-top:6px;font-size:8pt;">
-      <strong>3層保存の考え方：</strong>
-      「考課の正データは DB」「賞与の運用データは JSON」「Excel は既存資産の橋渡し」と役割分担。
-      すべて DB に寄せる案もあったが、賞与表は試作・変更が多く、ファイルベースの方が<strong>早く改善を回せた</strong>。
-    </div>
-
-    <div class="grid-2" style="margin-top:8px;">
-      <section>
-        <h2>⑦ 工夫したポイント</h2>
-        <div class="box green">
+    <!-- Insights -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">06</span>
+        <h2>工夫した点 / 苦戦した点</h2>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-box win">
+          <h3>✨ 工夫したポイント</h3>
           <ul>
-            <li><strong>ロール別 UI</strong> — 施設長は「案・引当金」、本部は「確定賞与」と編集範囲を画面で明示</li>
-            <li><strong>金額の自動保存</strong> — 700ms デバウンスで入力消失を防止</li>
-            <li><strong>引当金サマリー</strong> — 社保15%込み合計と引当金の差額をリアルタイム表示</li>
-            <li><strong>年度別管理</strong> — 過去年度は閲覧のみ、現行年度だけ編集可能</li>
-            <li><strong>Excel なしでも全施設対応</strong> — PostgreSQL 名簿から行を自動生成</li>
-            <li><strong>公開デモ</strong> — 架空データ・役割切替・CORS 自動許可で課題提出 URL を安全に公開</li>
-            <li><strong>施設長ビュー</strong> — 本部が全施設長を横断して賞与を確認できる特殊画面</li>
+            <li><strong>ロール別 UI</strong> — 施設長は「案・引当金」、本部は「確定」と編集範囲を明示</li>
+            <li><strong>自動保存</strong> — 金額入力を 700ms デバウンスで保存、消失を防止</li>
+            <li><strong>引当金サマリー</strong> — 社保込み合計と引当金の差額をリアルタイム表示</li>
+            <li><strong>年度別管理</strong> — 過去は閲覧のみ、現行年度だけ編集可能</li>
+            <li><strong>Excel なし対応</strong> — 名簿から行を自動生成、全施設で開始可能</li>
+            <li><strong>公開デモ</strong> — 架空データ・5役割切替・CORS 対応で URL 提出</li>
           </ul>
         </div>
-      </section>
-      <section>
-        <h2>⑧ 苦戦したポイント</h2>
-        <div class="box rose">
+        <div class="insight-box struggle">
+          <h3>🌀 苦戦したポイント</h3>
           <ul>
-            <li><strong>Excel と Web の二重管理</strong> — 施設ごとに Excel 有無が異なり、<code>bonus_workbook.py</code> に条件分岐が集中</li>
-            <li><strong>権限の細分化</strong> — 項目×ロール×年度の組み合わせ（案/確定/引当金/閲覧のみ）の整理</li>
-            <li><strong>単位の統一</strong> — 円と千円が混在。読込時マイグレーションで千円に統一</li>
-            <li><strong>UI スクロール</strong> — flex レイアウト内で表が伸び、全体スクロール不能になる不具合を CSS で解決</li>
-            <li><strong>クラウド公開</strong> — CORS・デモ seed・Excel 未設定時の例外など、ローカルと本番の差分対応</li>
-            <li><strong>年度別 JSON 移行</strong> — 既存フラット構造を壊さず <code>years</code> 構造へ自動移行</li>
+            <li><strong>Excel と Web の二重管理</strong> — 施設ごとに Excel 有無が異なり条件分岐が増加</li>
+            <li><strong>権限の細分化</strong> — 項目×ロール×年度（案/確定/閲覧のみ）の整理</li>
+            <li><strong>単位統一</strong> — 円と千円の混在を読込時マイグレーションで解決</li>
+            <li><strong>UI スクロール</strong> — flex 内の表で全体スクロール不能 → CSS で領域分離</li>
+            <li><strong>クラウド公開</strong> — CORS・seed・Excel 未設定時の本番差分対応</li>
+            <li><strong>JSON 移行</strong> — フラット構造から years 構造へ自動移行</li>
           </ul>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
-    <h2>⑨ 技術スタック（参考）</h2>
-    <div class="grid-3">
-      <div class="box"><strong>Frontend</strong><br/>React, TypeScript, Vite<br/>Vercel デプロイ</div>
-      <div class="box"><strong>Backend</strong><br/>FastAPI, SQLAlchemy<br/>Railway デプロイ</div>
-      <div class="box"><strong>Data</strong><br/>PostgreSQL, JSON, openpyxl<br/>pytest テスト</div>
-    </div>
+    <!-- Tech -->
+    <section>
+      <div class="section-head">
+        <span class="section-num">07</span>
+        <h2>技術スタック</h2>
+      </div>
+      <div class="tech-row">
+        <div class="tech-pill"><strong>Frontend</strong><span>React · TS · Vite</span></div>
+        <div class="tech-pill"><strong>Backend</strong><span>FastAPI · SQLAlchemy</span></div>
+        <div class="tech-pill"><strong>Deploy</strong><span>Vercel · Railway</span></div>
+        <div class="tech-pill"><strong>Data</strong><span>PostgreSQL · JSON</span></div>
+      </div>
+    </section>
 
-    <p style="font-size:7.5pt;color:#666;margin-top:8px;text-align:center;">
-      詳細レポート：docs/BONUS_WORKBOOK_REPORT.md ／
-      ツール：https://safir-hyouka.vercel.app ／
-      図解：https://safir-hyouka.vercel.app/assignment/
-    </p>
+    <footer>
+      <p>
+        <a href="https://safir-hyouka.vercel.app">デモ</a> ·
+        <a href="https://safir-hyouka.vercel.app/assignment/">図解（このページ）</a> ·
+        safir_hyouka
+      </p>
+    </footer>
   </div>
 </body>
 </html>
