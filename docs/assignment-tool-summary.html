@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>サフィール人事考課システム — 課題提出用図解</title>
+  <style>
+    @page { size: A4 portrait; margin: 10mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      font-size: 9pt;
+      line-height: 1.45;
+      color: #1a1a1a;
+      background: #eceff3;
+      padding: 14px;
+    }
+    .page {
+      max-width: 210mm;
+      margin: 0 auto 14px;
+      background: #fff;
+      padding: 11mm 12mm;
+      box-shadow: 0 2px 10px rgba(0,0,0,.12);
+      page-break-after: always;
+    }
+    .page:last-child { page-break-after: auto; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page { box-shadow: none; margin: 0; padding: 0; }
+      .no-print { display: none; }
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2.5px solid #2563eb;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .header h1 { font-size: 14pt; color: #1e40af; }
+    .header .meta { font-size: 8pt; color: #555; text-align: right; }
+
+    h2 {
+      font-size: 10pt;
+      color: #1e40af;
+      border-left: 4px solid #2563eb;
+      padding-left: 6px;
+      margin: 8px 0 5px;
+    }
+    h3 { font-size: 8.5pt; color: #374151; margin: 4px 0 3px; }
+
+    .lead {
+      background: #eff6ff;
+      border: 1px solid #93c5fd;
+      border-radius: 5px;
+      padding: 6px 8px;
+      margin-bottom: 8px;
+      font-size: 8.5pt;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+
+    .box {
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: 6px 7px;
+      background: #fafafa;
+    }
+    .box.blue { background: #eff6ff; border-color: #93c5fd; }
+    .box.green { background: #ecfdf5; border-color: #6ee7b7; }
+    .box.amber { background: #fffbeb; border-color: #fcd34d; }
+    .box.rose { background: #fff1f2; border-color: #fda4af; }
+
+    /* Architecture */
+    .arch { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8pt; }
+    .arch-row { display: flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .arch-box {
+      border: 1.5px solid #374151;
+      border-radius: 4px;
+      padding: 4px 8px;
+      text-align: center;
+      background: #fff;
+      min-width: 110px;
+    }
+    .arch-box.ui { border-color: #2563eb; background: #eff6ff; }
+    .arch-box.api { border-color: #7c3aed; background: #f5f3ff; }
+    .arch-box.db { border-color: #059669; background: #ecfdf5; }
+    .arch-box.file { border-color: #d97706; background: #fffbeb; }
+    .arrow { color: #6b7280; font-size: 8pt; }
+
+    /* Screenshots */
+    .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    figure {
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+    }
+    figure img { width: 100%; display: block; border-bottom: 1px solid #e5e7eb; }
+    figcaption {
+      font-size: 7.5pt;
+      padding: 4px 6px;
+      color: #374151;
+      background: #f9fafb;
+    }
+    figcaption strong { color: #1e40af; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+    th, td { border: 1px solid #d1d5db; padding: 3px 5px; vertical-align: top; }
+    th { background: #f3f4f6; text-align: left; white-space: nowrap; }
+
+    ul { padding-left: 1.2em; }
+    li { margin-bottom: 2px; }
+
+    .tag {
+      display: inline-block;
+      font-size: 7pt;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      margin-right: 3px;
+    }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      font-size: 7.5pt;
+      margin: 4px 0;
+    }
+    .flow-step {
+      border: 1px solid #9ca3af;
+      border-radius: 4px;
+      padding: 2px 6px;
+      background: #fff;
+    }
+
+    .no-print {
+      max-width: 210mm;
+      margin: 0 auto 10px;
+      padding: 8px 10px;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      border-radius: 6px;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+  <p class="no-print">
+    <strong>提出用 URL：</strong>
+    <a href="https://safir-hyouka.vercel.app/assignment/">https://safir-hyouka.vercel.app/assignment/</a>
+    （印刷が必要な場合は Chrome の「印刷 → PDF に保存」）
+  </p>
+
+  <!-- ===== PAGE 1 ===== -->
+  <div class="page">
+    <header class="header">
+      <div>
+        <h1>サフィール人事考課・賞与表システム</h1>
+        <p style="font-size:8.5pt;color:#555;margin-top:2px;">safir_hyouka — 課題提出用 図解資料</p>
+      </div>
+      <div class="meta">
+        <span>氏名：（　　　　　　　　　　）</span>
+        <span>所属：（　　　　　　　　　　）</span>
+        <span>作成日：2026年7月3日</span>
+        <span>公開デモ：https://safir-hyouka.vercel.app</span>
+      </div>
+    </header>
+
+    <div class="lead">
+      介護施設グループの<strong>人事考課（自己評価・評価者考課・本部考課）</strong>と<strong>賞与表管理</strong>を Web 化したツール。
+      ロール別の権限制御、年度別の賞与データ保存、公開デモ（ログイン不要・役割切替）まで実装した。
+    </div>
+
+    <h2>① システム全体構成</h2>
+    <div class="box blue">
+      <div class="arch">
+        <div class="arch-row">
+          <div class="arch-box ui"><strong>ブラウザ UI</strong><br/>React + TypeScript<br/><span style="color:#555;">Vercel 公開</span></div>
+        </div>
+        <div class="arrow">▼ HTTPS / REST API ▼</div>
+        <div class="arch-row">
+          <div class="arch-box api"><strong>API サーバー</strong><br/>FastAPI + Python<br/><span style="color:#555;">Railway 公開</span></div>
+        </div>
+        <div class="arrow">▼ 読み書き ▼</div>
+        <div class="arch-row">
+          <div class="arch-box db"><strong>PostgreSQL</strong><br/>名簿・考課・ユーザー</div>
+          <span class="arrow">＋</span>
+          <div class="arch-box file"><strong>JSON ファイル</strong><br/>賞与金額・引当金</div>
+          <span class="arrow">＋</span>
+          <div class="arch-box file"><strong>設定 JSON</strong><br/>施設マスタ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:7px;">
+      <section>
+        <h2>② 主な画面とロール</h2>
+        <table>
+          <tr><th>ロール</th><th>主な画面</th><th>できること</th></tr>
+          <tr><td>一般職員</td><td>自己評価</td><td>自己評価表の入力・提出</td></tr>
+          <tr><td>リーダー</td><td>部下の考課</td><td>一次評価（評価者1）の入力</td></tr>
+          <tr><td>施設長</td><td>賞与表 / 自己評価</td><td>賞与案・引当金の入力、考課反映</td></tr>
+          <tr><td>本部</td><td>本部考課 / 賞与表</td><td>二次評価、確定賞与の入力</td></tr>
+          <tr><td>管理者</td><td>管理画面 / 賞与表</td><td>期間管理・名簿・ユーザー管理</td></tr>
+        </table>
+        <p style="font-size:7.5pt;margin-top:4px;color:#555;">
+          公開デモでは画面上部の「デモ役割」から5役割を切り替え可能（パスワード不要）。
+        </p>
+      </section>
+      <section>
+        <h2>③ 典型的なデータの流れ</h2>
+        <div class="flow">
+          <span class="flow-step">① 名簿登録</span>→
+          <span class="flow-step">② 自己評価提出</span>→
+          <span class="flow-step">③ 評価者考課</span>→
+          <span class="flow-step">④ 本部考課</span>→
+          <span class="flow-step">⑤ 賞与表へ反映</span>→
+          <span class="flow-step">⑥ 金額確定</span>
+        </div>
+        <div class="box" style="margin-top:5px;font-size:8pt;">
+          <strong>考課データ</strong> → PostgreSQL（正規データ）<br/>
+          <strong>賞与金額・引当金</strong> → JSON（年度別・ロール別編集）<br/>
+          <strong>施設設定</strong> → facilities.json（コード変更なしで8施設対応）
+        </div>
+      </section>
+    </div>
+
+    <h2>④ ツール画面キャプチャ</h2>
+    <div class="shots">
+      <figure>
+        <img src="assignment-figures/01-bonus-admin.png" alt="賞与表（管理者）" />
+        <figcaption><strong>賞与表（管理者・本部視点）</strong> — 全施設の一覧、引当金サマリー、確定賞与の入力</figcaption>
+      </figure>
+      <figure>
+        <img src="assignment-figures/06-director-bonus.png" alt="賞与表（施設長）" />
+        <figcaption><strong>賞与表（施設長）</strong> — 自施設のみ。賞与案・引当金を編集（自動保存）</figcaption>
+      </figure>
+      <figure>
+        <img src="assignment-figures/02-hq-evaluator.png" alt="本部考課" />
+        <figcaption><strong>本部考課</strong> — 二次評価者が部下の考課を確認・入力</figcaption>
+      </figure>
+      <figure>
+        <img src="assignment-figures/03-evaluator-leader.png" alt="部下の考課" />
+        <figcaption><strong>部下の考課（リーダー）</strong> — 評価者1として一次考課を実施</figcaption>
+      </figure>
+      <figure>
+        <img src="assignment-figures/04-employee-self-eval.png" alt="自己評価" />
+        <figcaption><strong>自己評価（一般職員）</strong> — 10項目採点と所感の入力・提出</figcaption>
+      </figure>
+      <figure>
+        <img src="assignment-figures/05-admin-workspace.png" alt="管理画面" />
+        <figcaption><strong>管理画面</strong> — 考課期間・名簿取込・評価状況の管理</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- ===== PAGE 2 ===== -->
+  <div class="page">
+    <header class="header">
+      <h1 style="font-size:12pt;">データ設計・開発所感</h1>
+      <div class="meta"><span>サフィール人事考課システム — 図解 2/2</span></div>
+    </header>
+
+    <h2>⑤ 保持できるようにしたデータ</h2>
+    <table>
+      <tr><th>カテゴリ</th><th>保持する内容</th><th>例</th></tr>
+      <tr>
+        <td><span class="tag">名簿</span></td>
+        <td>社員ID・氏名・所属施設・職種・役職・勤続年数・評価者</td>
+        <td>山田 太郎 / デモ施設いなは / 介護職</td>
+      </tr>
+      <tr>
+        <td><span class="tag">考課</span></td>
+        <td>自己評価・評価者1/2の採点と所感、提出状態、確定日時</td>
+        <td>10項目採点、哲学・スローガン等のテキスト</td>
+      </tr>
+      <tr>
+        <td><span class="tag">賞与表</span></td>
+        <td>考課点・順位・ランク・備考・前年夏/冬・賞与案/確定・引当金</td>
+        <td>順位3位 / ランクB / 案500千円 / 確定480千円</td>
+      </tr>
+      <tr>
+        <td><span class="tag">期間</span></td>
+        <td>考課期間名・年度・季節・各締切・使用テンプレート</td>
+        <td>令和8年度 夏季考課</td>
+      </tr>
+      <tr>
+        <td><span class="tag">ユーザー</span></td>
+        <td>ログインID・ロール・管理者/本部フラグ</td>
+        <td>施設長 / 本部 / 管理者</td>
+      </tr>
+      <tr>
+        <td><span class="tag">監査</span></td>
+        <td>操作ログ（差戻し・退職処理など）</td>
+        <td>誰が・いつ・何をしたか</td>
+      </tr>
+      <tr>
+        <td><span class="tag">退職</span></td>
+        <td>退職時の考課データスナップショット（JSON + Excel）</td>
+        <td>data/retired_employees/</td>
+      </tr>
+    </table>
+
+    <h2>⑥ 保存先と、それを選んだ理由</h2>
+    <table>
+      <tr><th>保存先</th><th>パス / 場所</th><th>選んだ理由</th></tr>
+      <tr>
+        <td><strong>PostgreSQL</strong></td>
+        <td>Railway 上の DB<br/><code>employees</code> <code>evaluations</code> <code>users</code> 等</td>
+        <td>
+          名簿・考課はシステムの<strong>正規データ</strong>。複数画面・複数ユーザーで共有し、
+          リレーション（評価者↔部下）や提出状態を安全に管理するため。
+        </td>
+      </tr>
+      <tr>
+        <td><strong>JSON ファイル</strong></td>
+        <td><code>backend/data/bonus_amounts/{施設key}.json</code></td>
+        <td>
+          賞与は考課と<strong>ライフサイクルが異なる</strong>（施設長案→本部確定→引当金突合）。
+          年度キー付き JSON なら過去参照が容易で、Excel テンプレートと<strong>共存</strong>できる。
+          項目ごとの編集権限（案/確定/引当金）も API で細かく制御しやすい。
+        </td>
+      </tr>
+      <tr>
+        <td><strong>施設設定 JSON</strong></td>
+        <td><code>backend/data/facilities.json</code><br/>（デモは <code>facilities.demo.json</code>）</td>
+        <td>
+          8施設の名称・Excel シート名・引当金初期値を<strong>コード変更なし</strong>で差し替え可能。
+          デモ公開時は架空施設名に切替え、個人情報を載せない。
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Excel テンプレート</strong></td>
+        <td><code>.env</code> の <code>BONUS_WORKBOOK_TEMPLATE_PATH</code></td>
+        <td>
+          現場の<strong>既存 Excel 運用</strong>との互換。ダウンロード用の体裁維持。
+          デモ環境では未設定でも、名簿ベースで Web 賞与表を表示できるよう対応。
+        </td>
+      </tr>
+      <tr>
+        <td><strong>ブラウザ</strong></td>
+        <td><code>localStorage</code>（列表示設定・JWT）</td>
+        <td>
+          UI 設定はサーバー不要。セッション token もクライアント保持でシンプルに実装。
+        </td>
+      </tr>
+    </table>
+
+    <div class="box blue" style="margin-top:6px;font-size:8pt;">
+      <strong>3層保存の考え方：</strong>
+      「考課の正データは DB」「賞与の運用データは JSON」「Excel は既存資産の橋渡し」と役割分担。
+      すべて DB に寄せる案もあったが、賞与表は試作・変更が多く、ファイルベースの方が<strong>早く改善を回せた</strong>。
+    </div>
+
+    <div class="grid-2" style="margin-top:8px;">
+      <section>
+        <h2>⑦ 工夫したポイント</h2>
+        <div class="box green">
+          <ul>
+            <li><strong>ロール別 UI</strong> — 施設長は「案・引当金」、本部は「確定賞与」と編集範囲を画面で明示</li>
+            <li><strong>金額の自動保存</strong> — 700ms デバウンスで入力消失を防止</li>
+            <li><strong>引当金サマリー</strong> — 社保15%込み合計と引当金の差額をリアルタイム表示</li>
+            <li><strong>年度別管理</strong> — 過去年度は閲覧のみ、現行年度だけ編集可能</li>
+            <li><strong>Excel なしでも全施設対応</strong> — PostgreSQL 名簿から行を自動生成</li>
+            <li><strong>公開デモ</strong> — 架空データ・役割切替・CORS 自動許可で課題提出 URL を安全に公開</li>
+            <li><strong>施設長ビュー</strong> — 本部が全施設長を横断して賞与を確認できる特殊画面</li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <h2>⑧ 苦戦したポイント</h2>
+        <div class="box rose">
+          <ul>
+            <li><strong>Excel と Web の二重管理</strong> — 施設ごとに Excel 有無が異なり、<code>bonus_workbook.py</code> に条件分岐が集中</li>
+            <li><strong>権限の細分化</strong> — 項目×ロール×年度の組み合わせ（案/確定/引当金/閲覧のみ）の整理</li>
+            <li><strong>単位の統一</strong> — 円と千円が混在。読込時マイグレーションで千円に統一</li>
+            <li><strong>UI スクロール</strong> — flex レイアウト内で表が伸び、全体スクロール不能になる不具合を CSS で解決</li>
+            <li><strong>クラウド公開</strong> — CORS・デモ seed・Excel 未設定時の例外など、ローカルと本番の差分対応</li>
+            <li><strong>年度別 JSON 移行</strong> — 既存フラット構造を壊さず <code>years</code> 構造へ自動移行</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <h2>⑨ 技術スタック（参考）</h2>
+    <div class="grid-3">
+      <div class="box"><strong>Frontend</strong><br/>React, TypeScript, Vite<br/>Vercel デプロイ</div>
+      <div class="box"><strong>Backend</strong><br/>FastAPI, SQLAlchemy<br/>Railway デプロイ</div>
+      <div class="box"><strong>Data</strong><br/>PostgreSQL, JSON, openpyxl<br/>pytest テスト</div>
+    </div>
+
+    <p style="font-size:7.5pt;color:#666;margin-top:8px;text-align:center;">
+      詳細レポート：docs/BONUS_WORKBOOK_REPORT.md ／ 公開 URL：https://safir-hyouka.vercel.app
+    </p>
+  </div>
+</body>
+</html>
