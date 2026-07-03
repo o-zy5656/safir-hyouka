@@ -9,17 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0b1020;
-      --surface: rgba(255, 255, 255, 0.06);
-      --surface-2: rgba(255, 255, 255, 0.1);
-      --border: rgba(255, 255, 255, 0.12);
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #818cf8;
-      --accent-2: #34d399;
-      --accent-3: #f472b6;
-      --accent-4: #fbbf24;
-      --glow: 0 24px 80px rgba(99, 102, 241, 0.18);
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #6366f1;
+      --accent-2: #059669;
+      --accent-3: #db2777;
+      --accent-4: #d97706;
+      --glow: 0 12px 40px rgba(99, 102, 241, 0.14);
       --radius: 20px;
       --radius-sm: 12px;
     }
@@ -39,9 +39,9 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99, 102, 241, 0.35), transparent),
-        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(244, 114, 182, 0.2), transparent),
-        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(52, 211, 153, 0.15), transparent);
+        radial-gradient(ellipse 70% 50% at 10% 0%, rgba(199, 210, 254, 0.55), transparent),
+        radial-gradient(ellipse 50% 40% at 95% 5%, rgba(251, 207, 232, 0.45), transparent),
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(167, 243, 208, 0.35), transparent);
       pointer-events: none;
       z-index: 0;
     }
@@ -80,7 +80,7 @@
       height: 6px;
       border-radius: 50%;
       background: var(--accent-2);
-      box-shadow: 0 0 12px var(--accent-2);
+      box-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
     }
 
     h1 {
@@ -89,7 +89,7 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1.2;
-      background: linear-gradient(135deg, #fff 0%, #c7d2fe 50%, #fbcfe8 100%);
+      background: linear-gradient(135deg, #312e81 0%, #6366f1 45%, #db2777 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -100,24 +100,7 @@
       font-size: 1rem;
       color: var(--muted);
       max-width: 640px;
-      margin: 0 auto 24px;
-    }
-
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .hero-meta span {
-      padding: 6px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
+      margin: 0 auto 28px;
     }
 
     .url-row {
@@ -151,6 +134,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
     }
 
     /* Sections */
@@ -169,7 +153,6 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       color: var(--accent);
-      opacity: 0.9;
     }
 
     h2 {
@@ -177,18 +160,19 @@
       font-size: 1.35rem;
       font-weight: 700;
       letter-spacing: -0.01em;
+      color: #0f172a;
     }
 
     .lead-card {
       padding: 24px 28px;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(244, 114, 182, 0.08));
-      border: 1px solid var(--border);
+      background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+      border: 1px solid #c7d2fe;
       border-radius: var(--radius);
-      backdrop-filter: blur(12px);
       font-size: 0.95rem;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.08);
     }
 
-    .lead-card strong { color: #e0e7ff; }
+    .lead-card strong { color: #4338ca; }
 
     /* Architecture */
     .arch-flow {
@@ -198,6 +182,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.05);
     }
 
     .arch-layer {
@@ -214,7 +199,8 @@
       text-align: center;
       min-width: 140px;
       border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.6);
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
     }
 
     .arch-node strong {
@@ -228,10 +214,10 @@
       color: var(--muted);
     }
 
-    .arch-node.ui { border-color: rgba(129, 140, 248, 0.5); box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.15); }
-    .arch-node.api { border-color: rgba(167, 139, 250, 0.5); }
-    .arch-node.db { border-color: rgba(52, 211, 153, 0.5); }
-    .arch-node.file { border-color: rgba(251, 191, 36, 0.4); }
+    .arch-node.ui { border-color: #a5b4fc; background: #eef2ff; }
+    .arch-node.api { border-color: #c4b5fd; background: #f5f3ff; }
+    .arch-node.db { border-color: #6ee7b7; background: #ecfdf5; }
+    .arch-node.file { border-color: #fcd34d; background: #fffbeb; }
 
     .arch-arrow {
       text-align: center;
@@ -254,12 +240,14 @@
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       background: var(--surface);
-      transition: border-color 0.2s, transform 0.2s;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
 
     .role-card:hover {
       transform: translateY(-3px);
-      border-color: rgba(129, 140, 248, 0.4);
+      border-color: #a5b4fc;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
     }
 
     .role-badge {
@@ -272,11 +260,11 @@
       margin-bottom: 10px;
     }
 
-    .role-card:nth-child(1) .role-badge { background: rgba(52, 211, 153, 0.2); color: #6ee7b7; }
-    .role-card:nth-child(2) .role-badge { background: rgba(96, 165, 250, 0.2); color: #93c5fd; }
-    .role-card:nth-child(3) .role-badge { background: rgba(251, 191, 36, 0.2); color: #fcd34d; }
-    .role-card:nth-child(4) .role-badge { background: rgba(167, 139, 250, 0.2); color: #c4b5fd; }
-    .role-card:nth-child(5) .role-badge { background: rgba(244, 114, 182, 0.2); color: #f9a8d4; }
+    .role-card:nth-child(1) .role-badge { background: #d1fae5; color: #047857; }
+    .role-card:nth-child(2) .role-badge { background: #dbeafe; color: #1d4ed8; }
+    .role-card:nth-child(3) .role-badge { background: #fef3c7; color: #b45309; }
+    .role-card:nth-child(4) .role-badge { background: #ede9fe; color: #6d28d9; }
+    .role-card:nth-child(5) .role-badge { background: #fce7f3; color: #be185d; }
 
     .role-card h3 { font-size: 0.95rem; margin-bottom: 6px; }
     .role-card p { font-size: 0.8rem; color: var(--muted); }
@@ -329,14 +317,14 @@
       border-radius: var(--radius);
       overflow: hidden;
       border: 1px solid var(--border);
-      background: #111827;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      background: #fff;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
       transition: transform 0.25s, box-shadow 0.25s;
     }
 
     .shot:hover {
       transform: scale(1.01);
-      box-shadow: 0 28px 60px rgba(99, 102, 241, 0.2);
+      box-shadow: 0 16px 40px rgba(99, 102, 241, 0.15);
     }
 
     .shot img {
@@ -354,15 +342,17 @@
       right: 12px;
       padding: 10px 14px;
       border-radius: 10px;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
     }
 
     .shot-label strong {
       display: block;
       font-size: 0.85rem;
       margin-bottom: 2px;
+      color: #0f172a;
     }
 
     .shot-label span {
@@ -395,6 +385,7 @@
       border: 1px solid var(--border);
       background: var(--surface);
       border-left: 3px solid var(--accent);
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
     }
 
     .data-card:nth-child(2) { border-left-color: var(--accent-2); }
@@ -407,7 +398,7 @@
     .data-card h3 {
       font-size: 0.85rem;
       margin-bottom: 8px;
-      color: #e2e8f0;
+      color: #0f172a;
     }
 
     .data-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
@@ -415,8 +406,8 @@
       font-size: 0.75rem;
       padding: 6px 10px;
       border-radius: 8px;
-      background: rgba(0, 0, 0, 0.25);
-      color: #cbd5e1;
+      background: #f1f5f9;
+      color: #475569;
     }
 
     /* Storage */
@@ -431,6 +422,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       align-items: start;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
     }
 
     @media (max-width: 600px) {
@@ -448,16 +440,16 @@
       margin-bottom: 8px;
     }
 
-    .storage-item:nth-child(1) .storage-icon { background: rgba(52, 211, 153, 0.2); }
-    .storage-item:nth-child(2) .storage-icon { background: rgba(251, 191, 36, 0.2); }
-    .storage-item:nth-child(3) .storage-icon { background: rgba(96, 165, 250, 0.2); }
-    .storage-item:nth-child(4) .storage-icon { background: rgba(167, 139, 250, 0.2); }
-    .storage-item:nth-child(5) .storage-icon { background: rgba(244, 114, 182, 0.2); }
+    .storage-item:nth-child(1) .storage-icon { background: #d1fae5; }
+    .storage-item:nth-child(2) .storage-icon { background: #fef3c7; }
+    .storage-item:nth-child(3) .storage-icon { background: #dbeafe; }
+    .storage-item:nth-child(4) .storage-icon { background: #ede9fe; }
+    .storage-item:nth-child(5) .storage-icon { background: #fce7f3; }
 
-    .storage-item h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .storage-item h3 { font-size: 0.95rem; margin-bottom: 4px; color: #0f172a; }
     .storage-item code {
       font-size: 0.72rem;
-      color: #a5b4fc;
+      color: #4f46e5;
       display: block;
       margin-bottom: 8px;
       word-break: break-all;
@@ -469,9 +461,10 @@
       margin-top: 16px;
       padding: 18px 22px;
       border-radius: var(--radius-sm);
-      background: linear-gradient(90deg, rgba(99, 102, 241, 0.12), rgba(52, 211, 153, 0.08));
-      border: 1px solid rgba(129, 140, 248, 0.25);
+      background: linear-gradient(90deg, #eef2ff, #ecfdf5);
+      border: 1px solid #c7d2fe;
       font-size: 0.88rem;
+      color: #334155;
     }
 
     /* Insights */
@@ -492,13 +485,13 @@
     }
 
     .insight-box.win {
-      background: linear-gradient(160deg, rgba(52, 211, 153, 0.12), rgba(15, 23, 42, 0.5));
-      border-color: rgba(52, 211, 153, 0.25);
+      background: linear-gradient(160deg, #ecfdf5, #ffffff);
+      border-color: #a7f3d0;
     }
 
     .insight-box.struggle {
-      background: linear-gradient(160deg, rgba(244, 114, 182, 0.1), rgba(15, 23, 42, 0.5));
-      border-color: rgba(244, 114, 182, 0.25);
+      background: linear-gradient(160deg, #fdf2f8, #ffffff);
+      border-color: #fbcfe8;
     }
 
     .insight-box h3 {
@@ -517,7 +510,7 @@
 
     .insight-box li {
       font-size: 0.82rem;
-      color: #cbd5e1;
+      color: #475569;
       padding-left: 16px;
       position: relative;
     }
@@ -535,7 +528,7 @@
     .insight-box.win li::before { background: var(--accent-2); }
     .insight-box.struggle li::before { background: var(--accent-3); }
 
-    .insight-box li strong { color: #f1f5f9; }
+    .insight-box li strong { color: #0f172a; }
 
     /* Tech pills */
     .tech-row {
@@ -552,6 +545,7 @@
       border: 1px solid var(--border);
       text-align: center;
       min-width: 140px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
     }
 
     .tech-pill strong { display: block; font-size: 0.85rem; margin-bottom: 4px; }
@@ -566,14 +560,14 @@
       border-top: 1px solid var(--border);
     }
 
-    footer a { color: #a5b4fc; text-decoration: none; }
+    footer a { color: #4f46e5; text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
     @media print {
-      body { background: #fff; color: #111; }
+      body { background: #fff; }
       body::before { display: none; }
       .url-chip, .shot { box-shadow: none; }
-      .hero-meta, .url-row { display: none; }
+      .url-row { display: none; }
     }
   </style>
 </head>
@@ -586,11 +580,6 @@
         介護施設の考課と賞与を、ロールごとに分けて Web 上で扱えるツール。
         ログイン不要の公開デモで、5つの役割を切り替えて体験できます。
       </p>
-      <div class="hero-meta">
-        <span>氏名（記入）：＿＿＿＿＿＿＿＿</span>
-        <span>所属（記入）：＿＿＿＿＿＿＿＿</span>
-        <span>2026.7.3</span>
-      </div>
       <div class="url-row">
         <a class="url-chip primary" href="https://safir-hyouka.vercel.app/assignment/">📄 この図解ページ</a>
         <a class="url-chip secondary" href="https://safir-hyouka.vercel.app">🚀 デモを開く</a>
