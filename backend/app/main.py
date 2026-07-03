@@ -41,6 +41,9 @@ from app.schemas import (
     BonusWorkbookSummary,
     ChangePasswordRequest,
     CreateEmployeeRequest,
+    DemoLoginRequest,
+    DemoPersonaItem,
+    DemoPersonasResponse,
     EmployeeActionResponse,
     EmployeeAttributes,
     EmployeeListItem,
@@ -78,6 +81,11 @@ from app.services.bonus_workbook import (
     save_bonus_workbook_rows,
     sync_roster_to_bonus_workbook,
     user_can_access_bonus_workbook,
+)
+from app.services.demo_auth import (
+    find_demo_user,
+    list_demo_personas,
+    resolve_demo_login_employee_id,
 )
 from app.services.employee_import import import_employees_from_excel
 from app.services.employee_lifecycle import (
@@ -495,12 +503,34 @@ def demo_status():
     }
 
 
+@app.get("/api/auth/demo-personas", response_model=DemoPersonasResponse)
+def demo_personas(db: Session = Depends(get_db)):
+    if not settings.demo_mode:
+        raise HTTPException(status_code=403, detail="デモ役割一覧は無効です")
+    personas = list_demo_personas(db)
+    if not personas:
+        raise HTTPException(
+            status_code=503,
+            detail="デモ用アカウントが未設定です。管理者に seed_demo の実行を依頼してください",
+        )
+    return DemoPersonasResponse(
+        personas=[DemoPersonaItem(**item) for item in personas],
+        default_employee_id=settings.demo_guest_employee_id.strip(),
+    )
+
+
 @app.post("/api/auth/demo-login", response_model=TokenResponse)
-def demo_login(db: Session = Depends(get_db)):
+def demo_login(
+    body: Optional[DemoLoginRequest] = None,
+    db: Session = Depends(get_db),
+):
     if not settings.demo_mode:
         raise HTTPException(status_code=403, detail="デモログインは無効です")
-    employee_id = settings.demo_guest_employee_id.strip()
-    user = db.query(User).filter(User.employee_id == employee_id).first()
+    try:
+        employee_id = resolve_demo_login_employee_id(body.employee_id if body else None)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    user = find_demo_user(db, employee_id)
     if not user or not user.is_active:
         raise HTTPException(
             status_code=503,

@@ -4,6 +4,7 @@ import { AdminWorkspace } from "./components/AdminWorkspace";
 import { BonusWorkbookWorkspace } from "./components/BonusWorkbookWorkspace";
 import { ChangePasswordPage } from "./components/ChangePasswordPage";
 import { DemoBanner } from "./components/DemoBanner";
+import { DemoRoleSwitcher } from "./components/DemoRoleSwitcher";
 import { EvaluateeWorkspace } from "./components/EvaluateeWorkspace";
 import { EvaluatorWorkspace } from "./components/EvaluatorWorkspace";
 import { LoginPage } from "./components/LoginPage";
@@ -25,6 +26,24 @@ async function bootstrapSession(): Promise<UserInfo> {
   return api.me();
 }
 
+function applyDemoDefaultView(me: UserInfo): {
+  viewAdmin: boolean;
+  viewSelfEval: boolean;
+  viewBonus: boolean;
+  viewPasswordReset: boolean;
+} {
+  if (me.role === "admin") {
+    return { viewAdmin: false, viewSelfEval: false, viewBonus: true, viewPasswordReset: false };
+  }
+  if (me.is_hq_evaluator) {
+    return { viewAdmin: false, viewSelfEval: false, viewBonus: false, viewPasswordReset: false };
+  }
+  if (me.can_access_bonus_workbook && me.has_facility_director_self_eval) {
+    return { viewAdmin: false, viewSelfEval: false, viewBonus: true, viewPasswordReset: false };
+  }
+  return { viewAdmin: false, viewSelfEval: false, viewBonus: false, viewPasswordReset: false };
+}
+
 function App() {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,8 +63,12 @@ function App() {
     bootstrapSession()
       .then((me) => {
         setUser(me);
-        if (IS_DEMO_MODE && me.can_access_bonus_workbook) {
-          setViewBonus(true);
+        if (IS_DEMO_MODE) {
+          const defaults = applyDemoDefaultView(me);
+          setViewAdmin(defaults.viewAdmin);
+          setViewSelfEval(defaults.viewSelfEval);
+          setViewBonus(defaults.viewBonus);
+          setViewPasswordReset(defaults.viewPasswordReset);
         }
       })
       .catch((error: unknown) => {
@@ -162,19 +185,34 @@ function App() {
           ? "考課画面へ"
           : "元の画面へ";
 
+  const handleDemoPersonaSwitch = (me: UserInfo) => {
+    setUser(me);
+    const defaults = applyDemoDefaultView(me);
+    setViewAdmin(defaults.viewAdmin);
+    setViewSelfEval(defaults.viewSelfEval);
+    setViewBonus(defaults.viewBonus);
+    setViewPasswordReset(defaults.viewPasswordReset);
+  };
+
   return (
     <div className="app-shell">
       <DemoBanner />
       <div className="user-bar">
         <div className="user-bar-identity">
           <span className="user-bar-name">
-            {IS_DEMO_MODE ? "デモ閲覧（管理者）" : user.name ?? user.employee_id}（
+            {IS_DEMO_MODE ? `[デモ] ${user.name ?? user.employee_id}` : user.name ?? user.employee_id}（
             {ROLE_LABELS[user.role]}
             {user.is_hq_evaluator ? "・本部" : ""}）
           </span>
           <span className="current-mode-badge">{currentModeLabel}</span>
         </div>
         <div className="user-bar-actions">
+          {IS_DEMO_MODE && (
+            <DemoRoleSwitcher
+              currentEmployeeId={user.employee_id}
+              onSwitch={handleDemoPersonaSwitch}
+            />
+          )}
           {hasOwnSelfEval &&
             user.role !== "employee" &&
             !showAdminWorkspace &&

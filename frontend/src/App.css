@@ -114,6 +114,40 @@ body,
   flex-shrink: 0;
 }
 
+.demo-role-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.demo-role-switcher-label {
+  color: #d1d5db;
+  white-space: nowrap;
+}
+
+.demo-role-switcher-select {
+  background: #1f2937;
+  color: #fff;
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  max-width: 14rem;
+}
+
+.demo-role-switcher-status {
+  color: #d1d5db;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.demo-role-switcher-error {
+  color: #fca5a5;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
 .topbar {
   display: flex;
   align-items: center;

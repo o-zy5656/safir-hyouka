@@ -14,6 +14,7 @@ import type {
   ImportResult,
   RetiredArchiveItem,
   UserInfo,
+  DemoPersonasResponse,
   WorkspaceResponse,
 } from "../types";
 
@@ -52,8 +53,17 @@ function formatApiError(detail: unknown): string {
   return "APIエラーが発生しました";
 }
 
-export async function demoLogin() {
-  const res = await fetch(`${API_BASE}/api/auth/demo-login`, { method: "POST" });
+export async function fetchDemoPersonas() {
+  const data = await request<DemoPersonasResponse>("/api/auth/demo-personas");
+  return data.personas;
+}
+
+export async function demoLogin(employeeId?: string) {
+  const res = await fetch(`${API_BASE}/api/auth/demo-login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(employeeId ? { employee_id: employeeId } : {}),
+  });
   if (!res.ok) {
     const detail = await res.json().catch(() => ({}));
     throw new Error(formatApiError(detail.detail) || "デモログインに失敗しました");

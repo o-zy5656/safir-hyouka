@@ -17,6 +17,21 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
+class DemoLoginRequest(BaseModel):
+    employee_id: Optional[str] = None
+
+
+class DemoPersonaItem(BaseModel):
+    employee_id: str
+    label: str
+    name: Optional[str] = None
+
+
+class DemoPersonasResponse(BaseModel):
+    personas: List[DemoPersonaItem]
+    default_employee_id: str
+
+
 class UserResponse(BaseModel):
     id: UUID
     employee_id: str

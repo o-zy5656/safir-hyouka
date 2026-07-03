@@ -246,3 +246,14 @@ export interface UserInfo {
   facility_key?: string | null;
   facility_label?: string | null;
 }
+
+export interface DemoPersona {
+  employee_id: string;
+  label: string;
+  name: string | null;
+}
+
+export interface DemoPersonasResponse {
+  personas: DemoPersona[];
+  default_employee_id: string;
+}

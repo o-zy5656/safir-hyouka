@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     auto_seed_demo: bool = False
     demo_mode: bool = False
     demo_guest_employee_id: str = "ADMIN001"
+    demo_switchable_employee_ids: str = "ADMIN001,hq001,DIR001,E010,E101"
     production_mode: bool = False
     admin_job_titles: str = "施設長"
     eval1_leader_titles: str = "リーダー,サブリーダー"
