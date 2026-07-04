@@ -23,7 +23,16 @@ async function bootstrapSession(): Promise<UserInfo> {
   if (IS_DEMO_MODE && !localStorage.getItem("token")) {
     await demoLogin();
   }
-  return api.me();
+  try {
+    return await api.me();
+  } catch (err) {
+    if (IS_DEMO_MODE && localStorage.getItem("token")) {
+      localStorage.removeItem("token");
+      await demoLogin();
+      return api.me();
+    }
+    throw err;
+  }
 }
 
 function applyDemoDefaultView(me: UserInfo): {
